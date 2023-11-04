@@ -1,0 +1,24 @@
+server:
+  port: 8088
+  servlet:
+    context-path: /interfaces
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://124.221.25.145:3306/lottery?serverTimezone=UTC&useUnicode=true
+    username: root
+    password: 13379895997.hui
+mybatis:
+  mapper-locations: classpath:/mybatis/mapper/*.xml
+  config-location: classpath:/mybatis/config/mybatis-config.xml
+dubbo:
+  registry:
+    address: zookeeper://124.221.25.145:2181
+  application:
+    name: Lottery
+    version: 1.0
+  protocol:
+    name: dubbo
+    port: 20881
+  scan:
+    base-packages: com.kevin.lottery.rpc
