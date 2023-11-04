@@ -2,10 +2,10 @@
 
 ## 基础架构
 
-![img.png](img.png)
+![img.png](imgs/img.png)
 ### DDD分层架构
 项目结构
-![img_2.png](img_2.png)
+![img_2.png](/imgs/img_2.png)
 
 #### 应用层Application
 
@@ -58,7 +58,7 @@ dubbo:
 ```
 
 `dubbo的调用过程`
-![img_1.png](img_1.png)
+![img_1.png](imgs/img_1.png)
 
 ### 活动表设计
 
@@ -93,5 +93,8 @@ create table `activity`(
 
 这里的utf8mb4_bin 是一种区分大小写和二进制比较的utf-8编码字符集。
 
+#### 对应的具体表
+![img.png](imgs/img4.png)
 
+因为涉及到活动，活动的进行规则、策略，奖品的发放，以及奖品发放等信息，以及用户、用户参与信息等表。
 

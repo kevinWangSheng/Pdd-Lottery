@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kevin.lottery.infrastructure.dao.StrategyDetailMapper">
+
+    <resultMap id="BaseResultMap" type="com.kevin.lottery.infrastructure.po.StrategyDetail">
+            <id property="id" column="id" jdbcType="BIGINT"/>
+            <result property="strategyId" column="strategy_id" jdbcType="BIGINT"/>
+            <result property="awardId" column="award_id" jdbcType="VARCHAR"/>
+            <result property="awardCount" column="award_count" jdbcType="INTEGER"/>
+            <result property="awardRate" column="award_rate" jdbcType="DECIMAL"/>
+            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+            <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,strategy_id,award_id,
+        award_count,award_rate,create_time,
+        update_time
+    </sql>
+</mapper>

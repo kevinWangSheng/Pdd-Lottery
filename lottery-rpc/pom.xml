@@ -27,15 +27,9 @@
         </dependency>
         <dependency>
             <groupId>com.kevin</groupId>
-            <artifactId>lottery-infrastructure</artifactId>
+            <artifactId>lottery-domain</artifactId>
             <version>0.0.1-SNAPSHOT</version>
-            <scope>compile</scope>
         </dependency>
 
-        <dependency>
-            <groupId>com.kevin</groupId>
-            <artifactId>lottery-common</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
-        </dependency>
     </dependencies>
 </project>
