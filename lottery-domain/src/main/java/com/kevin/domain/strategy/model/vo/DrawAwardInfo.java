@@ -14,4 +14,8 @@ import lombok.NoArgsConstructor;
 public class DrawAwardInfo {
     private String awardId;
     private String awardName;
+
+    private String awardContent;
+
+    private Integer awardType;
 }

@@ -1,4 +1,4 @@
-package com.kevin.domain.strategy.repository;
+package com.kevin.domain.award.repository;
 
 
 import com.baomidou.mybatisplus.extension.service.IService;
@@ -12,4 +12,6 @@ import com.kevin.lottery.infrastructure.po.Award;
 public interface AwardRepository extends IService<Award> {
 
     Award getByAwardId(String awardId);
+
+    // TODO 对分库分表中的用户中奖纪录操作
 }

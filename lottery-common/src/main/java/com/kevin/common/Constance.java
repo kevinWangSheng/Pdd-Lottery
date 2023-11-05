@@ -62,4 +62,34 @@ public class Constance {
         private Integer code;
         private String info;
     }
+
+    @Getter
+    @AllArgsConstructor
+    public enum AwardState {
+        WAIT(0, "等待发奖"),
+
+        /**
+         * 发奖成功
+         */
+        SUCCESS(1, "发奖成功"),
+
+        /**
+         * 发奖失败
+         */
+        FAILURE(2, "发奖失败");
+        private Integer code;
+        private String info;
+
+    }
+
+    @Getter
+    @AllArgsConstructor
+    public enum AwardType{
+        Coupon(1,"优惠券"),
+        Desc(2,"文字描述"),
+        Physical(3,"实物奖品"),
+        RedeemCode(4,"兑换码");
+        private Integer code;
+        private String info;
+    }
 }

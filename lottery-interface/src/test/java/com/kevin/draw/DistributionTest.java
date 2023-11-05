@@ -21,33 +21,20 @@ import javax.annotation.Resource;
 
 /**
  * @author wang
- * @create 2023-2023-04-20:11
+ * @create 2023-2023-05-16:49
  */
 @SpringBootTest
 @RunWith(SpringJUnit4ClassRunner.class)
-public class DrawAlgorithmTest {
-
-
+public class DistributionTest {
     @Resource
     private IDrawExec drawExec;
-
-    @Test
-    public void algoTest(){
-        drawExec.doDrawExec(new DrawReq("小傅哥", 10001L));
-        drawExec.doDrawExec(new DrawReq("小佳佳", 10001L));
-        drawExec.doDrawExec(new DrawReq("小蜗牛", 10001L));
-        drawExec.doDrawExec(new DrawReq("八杯水", 10001L));
-
-    }
-
-
 
     @Resource
     private DistributionGoodsFactory distributionGoodsFactory;
 
     private final Logger logger = LoggerFactory.getLogger(DistributionTest.class);
     @Test
-    public void Drawtest() {
+    public void test() {
         DrawResp drawResp = drawExec.doDrawExec(new DrawReq("wanglaowu", 10001l));
 
         Integer drawState = drawResp.getDrawState();

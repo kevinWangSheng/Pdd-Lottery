@@ -70,7 +70,7 @@ public abstract class AbstractBaseDraw extends DrawStrategySupport implements ID
         }
         Award award = super.queryAward(awardId);
         logger.info("执行策略抽奖完成【已中奖】，用户：{} 策略ID：{} 奖品ID：{} 奖品名称：{}", userId, strategyId, awardId, award.getAwardName());
-        return new DrawResp(userId, strategyId, Constance.DrawState.SUCCESS.getCode(),new DrawAwardInfo(awardId,award.getAwardName()));
+        return new DrawResp(userId, strategyId, Constance.DrawState.SUCCESS.getCode(),new DrawAwardInfo(awardId,award.getAwardName(),award.getAwardConent(),award.getAwardType()));
     }
 
     protected abstract String drawAlgorithm(Long strategyId, IDrawAlgorithm drawAlgorithm, List<String> exculdStrategyDetails);

@@ -15,7 +15,6 @@ import javax.annotation.Resource;
  * @create 2023-2023-04-19:36
  */
 @SpringBootTest
-
 public class DrawAlgoTest {
     @Resource
     IDrawExec drawExec;

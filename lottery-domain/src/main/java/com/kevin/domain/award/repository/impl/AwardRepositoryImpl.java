@@ -1,8 +1,8 @@
-package com.kevin.domain.strategy.repository.impl;
+package com.kevin.domain.award.repository.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.kevin.domain.strategy.repository.AwardRepository;
+import com.kevin.domain.award.repository.AwardRepository;
 import com.kevin.lottery.infrastructure.dao.AwardMapper;
 import com.kevin.lottery.infrastructure.po.Award;
 import org.springframework.stereotype.Service;

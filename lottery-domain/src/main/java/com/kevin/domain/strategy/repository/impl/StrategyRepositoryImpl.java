@@ -1,10 +1,9 @@
 package com.kevin.domain.strategy.repository.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.kevin.domain.strategy.model.aggregates.StrategyRich;
-import com.kevin.domain.strategy.repository.AwardRepository;
+import com.kevin.domain.award.repository.AwardRepository;
 import com.kevin.domain.strategy.repository.StrategyDetailRepository;
 import com.kevin.domain.strategy.repository.StrategyRepository;
 import com.kevin.lottery.infrastructure.dao.StrategyDetailMapper;
@@ -15,7 +14,6 @@ import com.kevin.lottery.infrastructure.po.StrategyDetail;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -66,12 +64,13 @@ public class StrategyRepositoryImpl extends ServiceImpl<StrategyMapper, Strategy
 
     @Override
     public boolean deducStock(Long strategyId, String awardId) {
-        return strategyDetailRepository.deducStock(strategyId,awardId);
-//        StrategyDetail strategyDetail = new StrategyDetail();
-//        strategyDetail.setStrategyId(strategyId);
-//        strategyDetail.setAwardId(awardId);
-//        // 扣减库存
-//        int count = strategyDetailMapper.deducStock(strategyDetail);
+//        return strategyDetailRepository.deducStock(strategyId,awardId);
+        StrategyDetail strategyDetail = new StrategyDetail();
+        strategyDetail.setStrategyId(strategyId);
+        strategyDetail.setAwardId(awardId);
+        // 扣减库存
+        int count = strategyDetailMapper.deducStock(strategyDetail);
+        return count == 1;
     }
 }
 
