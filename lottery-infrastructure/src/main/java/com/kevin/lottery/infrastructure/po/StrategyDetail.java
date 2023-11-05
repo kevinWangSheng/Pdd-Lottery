@@ -52,6 +52,10 @@ public class StrategyDetail implements Serializable {
      */
     private Date updateTime;
 
+    private Integer awardSurplusCount;
+
+    private String awardDesc;
+
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
 

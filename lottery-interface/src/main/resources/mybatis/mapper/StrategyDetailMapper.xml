@@ -12,6 +12,7 @@
             <result property="awardRate" column="award_rate" jdbcType="DECIMAL"/>
             <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
             <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+            <result property="awardSurplusCount" column="awardSurplusCount" jdbcType="INTEGER"/>
     </resultMap>
 
     <sql id="Base_Column_List">
@@ -19,4 +20,8 @@
         award_count,award_rate,create_time,
         update_time
     </sql>
+    <update id="deducStock" parameterType="com.kevin.lottery.infrastructure.po.StrategyDetail">
+        update strategy_detail set awardSurplusCount = awardSurplusCount-1
+        where strategy_id = #{strategyId} and award_id = #{awardId} and awardSurplusCount > 0
+    </update>
 </mapper>

@@ -1,5 +1,8 @@
 package com.kevin.common;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+
 /**
  * @author wang
  * @create 2023-2023-03-17:35
@@ -39,5 +42,24 @@ public class Constance {
         public void setDesc(String desc) {
             this.desc = desc;
         }
+    }
+
+    @Getter
+    @AllArgsConstructor
+    public enum StrategyMode{
+        SINGLE(1,"单次概率"),
+        ENTIRETY(2,"总体概率");
+        private Integer code;
+        private String info;
+    }
+
+    @Getter
+    @AllArgsConstructor
+    public enum DrawState{
+        FAIL(0,"未中奖"),
+        SUCCESS(1,"已中奖"),
+        COVER(2,"兜底奖");
+        private Integer code;
+        private String info;
     }
 }

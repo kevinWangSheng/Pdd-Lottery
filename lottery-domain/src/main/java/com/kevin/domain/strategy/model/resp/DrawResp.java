@@ -1,5 +1,6 @@
 package com.kevin.domain.strategy.model.resp;
 
+import com.kevin.domain.strategy.model.vo.DrawAwardInfo;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -16,8 +17,15 @@ public class DrawResp {
     private String uid;
     // 策略id
     private Long strategyId;
-    // 奖品名称
-    private String awardName;
-    // 奖品id
-    private String rewardId;
+
+    private Integer drawState;
+
+    private DrawAwardInfo drawAwardInfo;
+
+
+    public DrawResp(String uid, Long strategyId, Integer drawState) {
+        this.uid = uid;
+        this.strategyId = strategyId;
+        this.drawState = drawState;
+    }
 }

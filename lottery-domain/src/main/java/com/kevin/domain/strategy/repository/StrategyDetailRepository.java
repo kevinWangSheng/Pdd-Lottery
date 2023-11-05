@@ -14,4 +14,8 @@ import java.util.List;
 public interface StrategyDetailRepository extends IService<StrategyDetail> {
 
     List<StrategyDetail> queryStrategyDetailList(Long strategyId);
+
+    List<String> queryNoStockStrategyAwardList(Long strategyId);
+
+    boolean deducStock(Long strategyId, String awardId);
 }

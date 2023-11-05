@@ -10,7 +10,7 @@ spring:
     password: 13379895997.hui
 mybatis:
   mapper-locations: classpath:/mybatis/mapper/*.xml
-  config-location: classpath:/mybatis/config/mybatis-config.xml
+  config-location: classpath:/mybatis/mapper/mybatis-config.xml
 dubbo:
   registry:
     address: zookeeper://124.221.25.145:2181
