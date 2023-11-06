@@ -24,8 +24,16 @@ public class Result implements Serializable {
         return  new Result(code,info);
     }
 
+    public static Result buildResult(Constance.ResponseCode responseCode,String info) {
+        return new Result(responseCode.getCode(), info);
+    }
+
     public static Result buildSuccessResult() {
         return new Result(Constance.ResponseCode.SUCCESSFUL.getCode(), Constance.ResponseCode.SUCCESSFUL.getDesc());
+    }
+
+    public static Result buildFailResult(String info) {
+        return new Result(Constance.ResponseCode.UN_ERROR.getCode(), info);
     }
 
     public static Result buildFailResult() {

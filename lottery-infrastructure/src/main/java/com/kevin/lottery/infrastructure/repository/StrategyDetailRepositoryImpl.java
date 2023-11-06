@@ -1,12 +1,14 @@
-package com.kevin.domain.strategy.repository.impl;
+package com.kevin.lottery.infrastructure.repository;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 
+import com.kevin.domain.strategy.model.vo.StrategyDetailBriefVo;
 import com.kevin.domain.strategy.repository.StrategyDetailRepository;
 import com.kevin.lottery.infrastructure.dao.StrategyDetailMapper;
 import com.kevin.lottery.infrastructure.po.StrategyDetail;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -18,18 +20,24 @@ import java.util.stream.Collectors;
 * @description 针对表【strategy_detail(策略明细)】的数据库操作Service实现
 * @createDate 2023-11-04 16:07:32
 */
-@Service
+@Component
 public class StrategyDetailRepositoryImpl extends ServiceImpl<StrategyDetailMapper, StrategyDetail>
     implements StrategyDetailRepository {
 
     @Override
-    public List<StrategyDetail> queryStrategyDetailList(Long strategyId) {
+    public List<StrategyDetailBriefVo> queryStrategyDetailList(Long strategyId) {
         if(strategyId == null){
             return new ArrayList<>();
         }
         QueryWrapper<StrategyDetail> wrapper = new QueryWrapper<>();
         wrapper.lambda().eq(StrategyDetail::getStrategyId,strategyId);
-        return list(wrapper);
+        List<StrategyDetail> list = list(wrapper);
+        if(list == null){
+            return new ArrayList<>();
+        }
+        return list.stream()
+                .map(detail-> new StrategyDetailBriefVo(detail.getStrategyId(),detail.getAwardId(), detail.getAwardName(),detail.getAwardCount(),detail.getAwardSurplusCount(),detail.getAwardRate()))
+                .collect(Collectors.toList());
     }
 
     @Override

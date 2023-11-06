@@ -93,6 +93,31 @@ public class Strategy implements Serializable {
             && (this.getUpdateTime() == null ? other.getUpdateTime() == null : this.getUpdateTime().equals(other.getUpdateTime()));
     }
 
+    public Strategy(Long strategyId, String strategyDesc, String strategyName, Integer strategyMode, Integer grantType) {
+        this.strategyId = strategyId;
+        this.strategyDesc = strategyDesc;
+        this.strategyName = strategyName;
+        this.strategyMode = strategyMode;
+        this.grantType = grantType;
+    }
+
+    public Strategy(Long strategyId, String strategyDesc, Integer strategyMode, Integer grantType, String extendInfo) {
+        this.strategyId = strategyId;
+        this.strategyDesc = strategyDesc;
+        this.strategyMode = strategyMode;
+        this.grantType = grantType;
+        this.extendInfo = extendInfo;
+    }
+
+    public Strategy(Long strategyId, String strategyDesc, Integer strategyMode, Integer grantType, Date grantDate, String extendInfo) {
+        this.strategyId = strategyId;
+        this.strategyDesc = strategyDesc;
+        this.strategyMode = strategyMode;
+        this.grantType = grantType;
+        this.grantDate = grantDate;
+        this.extendInfo = extendInfo;
+    }
+
     @Override
     public int hashCode() {
         final int prime = 31;

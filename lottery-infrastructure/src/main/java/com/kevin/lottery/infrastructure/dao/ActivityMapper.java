@@ -2,6 +2,7 @@ package com.kevin.lottery.infrastructure.dao;
 
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.kevin.domain.activity.model.vo.AlterStateVo;
 import com.kevin.lottery.infrastructure.po.Activity;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -15,6 +16,7 @@ import org.apache.ibatis.annotations.Mapper;
 public interface ActivityMapper extends BaseMapper<Activity> {
 
 
+    int alterStatus(AlterStateVo alterStateVo);
 }
 
 

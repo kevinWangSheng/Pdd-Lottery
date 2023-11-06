@@ -32,7 +32,7 @@ public class ActivityServiceImpl extends ServiceImpl<ActivityMapper, Activity>
                         Activity::getStockCount,Activity::getTakeCount,Activity::getState);
         Activity activity = getOne(wrapper);
         if(activity == null){
-            return new ActivityResp(Result.buildFailResult(),null);
+            return new ActivityResp(Result.buildFailResult("活动状态变更失败"),null);
         }
         ActivityDto activityDto = new ActivityDto();
         BeanUtils.copyProperties(activity,activityDto);

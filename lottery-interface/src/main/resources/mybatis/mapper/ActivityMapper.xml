@@ -25,4 +25,9 @@
         stock_count,take_count,state,
         create_time,update_time,creator
     </sql>
+    <update id="alterStatus" parameterType="com.kevin.domain.activity.model.vo.AcitivityVo">
+        update activity
+        set state = #{afterState}
+        where activity_id = #{acitivityId} and state = #{beforeState}
+    </update>
 </mapper>

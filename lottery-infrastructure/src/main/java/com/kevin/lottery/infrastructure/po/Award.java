@@ -6,7 +6,10 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import java.io.Serializable;
 import java.util.Date;
+
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * 奖品配置
@@ -14,6 +17,8 @@ import lombok.Data;
  */
 @TableName(value ="award")
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class Award implements Serializable {
     /**
      * 自增id
@@ -24,7 +29,9 @@ public class Award implements Serializable {
     /**
      * 奖品id
      */
-    private Long awardId;
+    private String awardId;
+
+
 
     /**
      * 奖品类型（文字描述、兑换码、优惠券、实物奖品暂无）
@@ -59,6 +66,20 @@ public class Award implements Serializable {
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
 
+    public Award(String awardId, Integer awardType, Integer awardCount, String awardName, String awardConent) {
+        this.awardId = awardId;
+        this.awardType = awardType;
+        this.awardCount = awardCount;
+        this.awardName = awardName;
+        this.awardConent = awardConent;
+    }
+
+    public Award(String awardId, Integer awardType, String awardName, String awardConent) {
+        this.awardId = awardId;
+        this.awardType = awardType;
+        this.awardName = awardName;
+        this.awardConent = awardConent;
+    }
     @Override
     public boolean equals(Object that) {
         if (this == that) {

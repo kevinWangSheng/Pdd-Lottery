@@ -14,6 +14,7 @@ import org.apache.ibatis.annotations.Mapper;
 @Mapper
 public interface StrategyMapper extends BaseMapper<Strategy> {
 
+    Strategy queryStrategy(Long strategyId);
 }
 
 

@@ -3,6 +3,9 @@ package com.kevin.lottery.infrastructure.dao;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.kevin.lottery.infrastructure.po.Award;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 /**
 * @author wang sheng hui
@@ -12,7 +15,9 @@ import org.apache.ibatis.annotations.Mapper;
 */
 @Mapper
 public interface AwardMapper extends BaseMapper<Award> {
+    Award queryByAwardId(@Param("awardId")String awardId);
 
+    void insertBatch(List<Award> list);
 }
 
 

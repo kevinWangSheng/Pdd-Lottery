@@ -30,6 +30,11 @@
             <artifactId>mybatis-plus-boot-starter</artifactId>
             <version>3.5.3.2</version>
         </dependency>
+        <dependency>
+            <groupId>com.kevin</groupId>
+            <artifactId>lottery-domain</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
 
     </dependencies>
 </project>

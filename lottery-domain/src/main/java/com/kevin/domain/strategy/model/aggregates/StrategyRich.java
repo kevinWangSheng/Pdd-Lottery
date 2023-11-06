@@ -1,7 +1,7 @@
 package com.kevin.domain.strategy.model.aggregates;
 
-import com.kevin.lottery.infrastructure.po.Strategy;
-import com.kevin.lottery.infrastructure.po.StrategyDetail;
+import com.kevin.domain.strategy.model.vo.StrategyBriefVo;
+import com.kevin.domain.strategy.model.vo.StrategyDetailBriefVo;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -18,9 +18,9 @@ import java.util.List;
 public class StrategyRich {
     private Long strategyId;
 
-    private Strategy strategy;
+    private StrategyBriefVo strategy;
 
-    private List<StrategyDetail> strategyDetails;
+    private List<StrategyDetailBriefVo> strategyDetails;
 
 
 }

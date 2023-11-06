@@ -5,12 +5,9 @@ import com.kevin.domain.strategy.model.aggregates.StrategyRich;
 import com.kevin.domain.strategy.model.enums.DrawRateRandomDrawAlgorithmEnum;
 import com.kevin.domain.strategy.model.req.DrawReq;
 import com.kevin.domain.strategy.model.resp.DrawResp;
-import com.kevin.domain.strategy.model.vo.AwardRateInfo;
-import com.kevin.domain.strategy.model.vo.DrawAwardInfo;
+import com.kevin.domain.strategy.model.vo.*;
 import com.kevin.domain.strategy.service.algorithm.IDrawAlgorithm;
-import com.kevin.lottery.infrastructure.po.Award;
-import com.kevin.lottery.infrastructure.po.Strategy;
-import com.kevin.lottery.infrastructure.po.StrategyDetail;
+
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,7 +24,7 @@ public abstract class AbstractBaseDraw extends DrawStrategySupport implements ID
     private final Logger logger = LoggerFactory.getLogger(AbstractBaseDraw.class);
 
 
-    public void checkAndInitRateData(Long stragetryId, Integer strategryMode, List<StrategyDetail> strategyDetailList){
+    public void checkAndInitRateData(Long stragetryId, Integer strategryMode, List<StrategyDetailBriefVo> strategyDetailList){
         // 如果是单项抽奖概率就不需要加载到缓存中，他的数据库里面的数据就是他的概率
 //        if(!Constance.StrategyMode.SINGLE.getCode().equals(strategryMode)){
 //            return;
@@ -40,7 +37,7 @@ public abstract class AbstractBaseDraw extends DrawStrategySupport implements ID
         }
         // 对中奖的信息进行提取，然后进行后面的抽奖概率初始化
         List<AwardRateInfo> awardRateInfos = new ArrayList<>();
-        for(StrategyDetail strategyDetail:strategyDetailList){
+        for(StrategyDetailBriefVo strategyDetail:strategyDetailList){
             awardRateInfos.add(new AwardRateInfo(strategyDetail.getAwardId(),strategyDetail.getAwardRate()));
         }
         // 进行对应的初始化操作
@@ -51,7 +48,7 @@ public abstract class AbstractBaseDraw extends DrawStrategySupport implements ID
     public DrawResp doDrawExec(DrawReq drawreq) {
         StrategyRich strategyRich = super.queryStrategyByStrategyId(drawreq.getStrategyId());
         // 1.获取进行策略
-        Strategy strategy = strategyRich.getStrategy();
+        StrategyBriefVo strategy = strategyRich.getStrategy();
         IDrawAlgorithm drawAlgorithm = drawAlgorithmMap.get(strategy.getStrategyMode());
         // 2.检验抽奖策略是否已经加载到内存
         checkAndInitRateData(strategy.getStrategyId(),strategy.getStrategyMode(),strategyRich.getStrategyDetails());
@@ -68,9 +65,9 @@ public abstract class AbstractBaseDraw extends DrawStrategySupport implements ID
             logger.info("执行抽奖策略完成，【未中奖】，用户id:{},策略id:{}",userId,strategyId);
             return new DrawResp(userId,strategyId, Constance.DrawState.FAIL.getCode());
         }
-        Award award = super.queryAward(awardId);
+        AwardBriefVo award = super.queryAward(awardId);
         logger.info("执行策略抽奖完成【已中奖】，用户：{} 策略ID：{} 奖品ID：{} 奖品名称：{}", userId, strategyId, awardId, award.getAwardName());
-        return new DrawResp(userId, strategyId, Constance.DrawState.SUCCESS.getCode(),new DrawAwardInfo(awardId,award.getAwardName(),award.getAwardConent(),award.getAwardType()));
+        return new DrawResp(userId, strategyId, Constance.DrawState.SUCCESS.getCode(),new DrawAwardInfo(awardId,award.getAwardName(),award.getAwardDesc(),award.getAwardType()));
     }
 
     protected abstract String drawAlgorithm(Long strategyId, IDrawAlgorithm drawAlgorithm, List<String> exculdStrategyDetails);

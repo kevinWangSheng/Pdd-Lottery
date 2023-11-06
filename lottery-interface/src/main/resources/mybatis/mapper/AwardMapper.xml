@@ -20,4 +20,23 @@
         award_count,award_name,award_conent,
         create_time,update_time
     </sql>
+    <insert id="insertBatch">
+        insert into award(award_id,award_type,award_conent,award_name,create_time,update_time)
+        values
+            <foreach collection="list" item="item" index="index" separator=",">
+                (
+                 #{item.awardId},
+                 #{item.awardType},
+                 #{item.awardConent},
+                 #{item.awardName},
+                 NOW(),
+                 NOW()
+                 )
+            </foreach>
+                                                                           
+    </insert>
+    <select id="queryByAwardId" resultType="com.kevin.lottery.infrastructure.po.Award">
+        select award_id,award_type,award_name,award_content
+        from award where award_id = #{awardId}
+    </select>
 </mapper>

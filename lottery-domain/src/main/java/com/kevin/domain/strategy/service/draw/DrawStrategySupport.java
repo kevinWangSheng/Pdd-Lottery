@@ -1,9 +1,9 @@
 package com.kevin.domain.strategy.service.draw;
 
 import com.kevin.domain.strategy.model.aggregates.StrategyRich;
+import com.kevin.domain.strategy.model.vo.AwardBriefVo;
 import com.kevin.domain.strategy.repository.StrategyRepository;
-import com.kevin.lottery.infrastructure.po.Award;
-import com.kevin.lottery.infrastructure.po.Strategy;
+
 
 import javax.annotation.Resource;
 
@@ -18,7 +18,7 @@ public class DrawStrategySupport extends DrawConfig{
         return strategyRepository.queryStrategyRich(strategyId);
     }
 
-    public Award queryAward(String awardId) {
+    public AwardBriefVo queryAward(String awardId) {
         return strategyRepository.queryAward(awardId);
     }
 }

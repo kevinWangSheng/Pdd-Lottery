@@ -1,8 +1,7 @@
 package com.kevin.domain.strategy.repository;
 
 
-import com.baomidou.mybatisplus.extension.service.IService;
-import com.kevin.lottery.infrastructure.po.StrategyDetail;
+import com.kevin.domain.strategy.model.vo.StrategyDetailBriefVo;
 
 import java.util.List;
 
@@ -11,9 +10,9 @@ import java.util.List;
 * @description 针对表【strategy_detail(策略明细)】的数据库操作Service
 * @createDate 2023-11-04 16:07:32
 */
-public interface StrategyDetailRepository extends IService<StrategyDetail> {
+public interface StrategyDetailRepository{
 
-    List<StrategyDetail> queryStrategyDetailList(Long strategyId);
+    List<StrategyDetailBriefVo> queryStrategyDetailList(Long strategyId);
 
     List<String> queryNoStockStrategyAwardList(Long strategyId);
 

@@ -23,4 +23,11 @@
         grant_date,extend_info,create_time,
         update_time
     </sql>
+    <select id="queryStrategy" parameterType="java.lang.Long" resultMap="BaseResultMap">
+            SELECT
+                id, strategy_id, strategy_desc, strategy_mode, grant_type,
+                grant_date, extend_info, create_time, update_time
+            FROM strategy
+            WHERE strategy_id = #{strategyId}
+    </select>
 </mapper>

@@ -4,6 +4,9 @@ package com.kevin.lottery.infrastructure.dao;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.kevin.lottery.infrastructure.po.StrategyDetail;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 /**
 * @author wang sheng hui
@@ -15,6 +18,10 @@ import org.apache.ibatis.annotations.Mapper;
 public interface StrategyDetailMapper extends BaseMapper<StrategyDetail> {
 
     int deducStock(StrategyDetail strategyDetail);
+
+    List<StrategyDetail> queryStrategyDetailList(@Param("strategyId")Long strategyId);
+
+    void insertBatch(List<StrategyDetail> list);
 }
 
 

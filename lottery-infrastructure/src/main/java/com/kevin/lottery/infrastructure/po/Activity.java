@@ -6,7 +6,10 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import java.io.Serializable;
 import java.util.Date;
+
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * 活动配置
@@ -14,6 +17,8 @@ import lombok.Data;
  */
 @TableName(value ="activity")
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class Activity implements Serializable {
     /**
      * 自增id
@@ -61,6 +66,18 @@ public class Activity implements Serializable {
      */
     private Integer state;
 
+    public Activity(Long activityId, String activityName, String activityDesc, Date beginDateTime, Date endDateTime, Integer stockCount, Integer takeCount, Integer state, String creator) {
+        this.activityId = activityId;
+        this.activityName = activityName;
+        this.activityDesc = activityDesc;
+        this.beginDateTime = beginDateTime;
+        this.endDateTime = endDateTime;
+        this.stockCount = stockCount;
+        this.takeCount = takeCount;
+        this.state = state;
+        this.creator = creator;
+    }
+
     /**
      * 创建时间
      */
@@ -103,6 +120,20 @@ public class Activity implements Serializable {
             && (this.getCreateTime() == null ? other.getCreateTime() == null : this.getCreateTime().equals(other.getCreateTime()))
             && (this.getUpdateTime() == null ? other.getUpdateTime() == null : this.getUpdateTime().equals(other.getUpdateTime()))
             && (this.getCreator() == null ? other.getCreator() == null : this.getCreator().equals(other.getCreator()));
+    }
+
+    public Activity(Long activityId, String activityName, String activityDesc, Date beginDateTime, Date endDateTime, Integer stockCount, Integer takeCount, Integer state, Date createTime, Date updateTime, String creator) {
+        this.activityId = activityId;
+        this.activityName = activityName;
+        this.activityDesc = activityDesc;
+        this.beginDateTime = beginDateTime;
+        this.endDateTime = endDateTime;
+        this.stockCount = stockCount;
+        this.takeCount = takeCount;
+        this.state = state;
+        this.createTime = createTime;
+        this.updateTime = updateTime;
+        this.creator = creator;
     }
 
     @Override

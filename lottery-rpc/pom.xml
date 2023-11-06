@@ -27,7 +27,7 @@
         </dependency>
         <dependency>
             <groupId>com.kevin</groupId>
-            <artifactId>lottery-domain</artifactId>
+            <artifactId>lottery-infrastructure</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
 

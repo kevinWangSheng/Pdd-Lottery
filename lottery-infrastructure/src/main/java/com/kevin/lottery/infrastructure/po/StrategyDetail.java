@@ -7,7 +7,10 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
+
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * 策略明细
@@ -15,6 +18,8 @@ import lombok.Data;
  */
 @TableName(value ="strategy_detail")
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class StrategyDetail implements Serializable {
     /**
      * 自增id
@@ -54,10 +59,21 @@ public class StrategyDetail implements Serializable {
 
     private Integer awardSurplusCount;
 
-    private String awardDesc;
+    private String awardName;
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
+
+    public StrategyDetail(Long strategyId, String awardId, Integer awardCount, BigDecimal awardRate, Integer awardSurplusCount, String awardDesc) {
+        this.strategyId = strategyId;
+        this.awardId = awardId;
+        this.awardCount = awardCount;
+        this.awardRate = awardRate;
+        this.awardSurplusCount = awardSurplusCount;
+        this.awardName = awardDesc;
+    }
+
+
 
     @Override
     public boolean equals(Object that) {
