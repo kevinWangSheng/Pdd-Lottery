@@ -2,12 +2,36 @@ server:
   port: 8088
   servlet:
     context-path: /interfaces
-spring:
-  datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://124.221.25.145:3306/lottery?serverTimezone=UTC&useUnicode=true&characterEncoding=UTF-8
-    username: root
-    password: 13379895997.hui
+mini-db-router:
+  jdbc:
+    datasource:
+      dbCount: 2
+      tbCount: 4
+      default: db00
+      routerKey: uId
+      list: db01,db02
+      db00:
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        url: jdbc:mysql://124.221.25.145:3306/lottery?serverTimezone=UTC&useUnicode=true&characterEncoding=UTF-8
+        username: root
+        password: 13379895997.hui
+      db01:
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        url: jdbc:mysql://124.221.25.145:3306/lottery_01?serverTimezone=UTC&useUnicode=true&characterEncoding=UTF-8
+        username: root
+        password: 13379895997.hui
+      db02:
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        url: jdbc:mysql://124.221.25.145:3306/lottery_02?serverTimezone=UTC&useUnicode=true&characterEncoding=UTF-8
+        username: root
+        password: 13379895997.hui
+
+#spring:
+#  datasource:
+#    driver-class-name: com.mysql.cj.jdbc.Driver
+#    url: jdbc:mysql://124.221.25.145:3306/lottery?serverTimezone=UTC&useUnicode=true&characterEncoding=UTF-8
+#    username: root
+#    password: 13379895997.hui
 dubbo:
   registry:
     address: zookeeper://124.221.25.145:2181
