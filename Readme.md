@@ -114,6 +114,133 @@ create table `activity`(
 ## 设计模式的使用
 ![img.png](imgs/img_3.png)
 
+### 状态模式解决流程问题
+基础流程：
+![img.png](imgs/img_4.png)
+通过模板模式解决通用的流程方法，并且配合IStateHandler进行状态处理接口的方法
+进行实现每一个状态对应的方法，其中对于每一个状态，都单独定义一个类出来进行对应的实现，包括继承了基础类，和实现了对应的刘恒处理方法。
+并配合策略模式，将对应的类按照对应的枚举类型注入到一个map中，调用的时候需要找到对应的状态类型，然后执行他对应的状态方法就行了。
+其中这些状态类的状态方法是根据自己处于 转台进行对应的调整的
+
+#### 分布式id生成
+
+这里使用了一个策略模式进行id的生成，根据对应的业务选择对应的id生成策略。
+
+有雪花算法、短时间id+随机数生成，时间+ip生成等。
+
+如下：
+
+编写一个id生成接口
+
+```java
+public interface IIDGenerate {
+
+    /**
+     *获取ID，目前有两种实现方式 1. 雪花算法，用于生成单号
+     * 2. 日期算法，用于生成活动编号类，特性是生成数字串较短，但指定时间内不能生成太多
+     * 3. 随机算法，用于生成策略ID
+     * @return 返回根据策略生成的id
+     */
+    Long nextId();
+}
+```
+
+并进行对应的类别实现
+
+雪花id
+
+```java
+@Component
+public class SnowFlake implements IIDGenerate {
+    private Snowflake snowFlake;
+
+    @PostConstruct
+    public void init(){
+        long workId;
+
+        try {
+            workId = NetUtil.ipv4ToLong(NetUtil.getLocalhostStr());
+        } catch (Exception e) {
+            workId = NetUtil.getLocalhost().hashCode();
+        }
+        workId = workId >>16 &31;
+        long dateCenterId = 1l;
+        snowFlake = IdUtil.createSnowflake(workId,dateCenterId);
+    }
+    @Override
+    public Long nextId(){
+        return snowFlake.nextId();
+    }
+}
+```
+
+短id
+
+```java
+@Component
+public class ShortCode implements IIDGenerate {
+
+    @Override
+    public Long nextId() {
+        Calendar calendar = Calendar.getInstance();
+
+        int year = calendar.get(Calendar.YEAR);
+        int week = calendar.get(Calendar.WEEK_OF_YEAR);
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
+        int hour = calendar.get(Calendar.HOUR_OF_DAY);
+
+        StringBuilder sb = new StringBuilder();
+
+        sb.append(year-2020).append(hour).append(String.format("%02d",week)).append(day).append(String.format("%03d",new Random().nextInt(1000)));
+
+        return Long.parseLong(sb.toString());
+    }
+}
+
+```
+
+随机id
+
+```java
+@Component
+public class RandomNumeric implements IIDGenerate {
+
+    @Override
+    public Long nextId() {
+        return Long.parseLong(RandomStringUtils.randomNumeric(11));
+    }
+}
+```
+
+然后重新整合一个策略模式的总体组，将这些id生成类型的接口一一根据对应的类型放入进去，调用的时候传入对应的类型即可调用对应的id生成算法
+
+```java
+@Component
+public class IDContext {
+
+    /**
+     * 创建 ID 生成策略对象，属于策略设计模式的使用方式
+     * Params:
+     * snowFlake – 雪花算法，长码，大量 shortCode – 日期算法，短码，少量，全局唯一需要自己保证 randomNumeric – 随机算法，短码，大量，全局唯一需要自己保证
+     * Returns:
+     * IIdGenerator 实现类
+     * @param randomNumeric
+     * @param shortCode
+     * @param snowFlake
+     * @return
+     */
+    @Bean
+    public Map<Constance.Ids, IIDGenerate> idGenerateMap(RandomNumeric randomNumeric, ShortCode shortCode, SnowFlake snowFlake){
+        Map<Constance.Ids,IIDGenerate> map = new HashMap<>(8);
+        map.put(Constance.Ids.RandomNumeric,randomNumeric);
+        map.put(Constance.Ids.ShortCode,shortCode);
+        map.put(Constance.Ids.SnowFlake,snowFlake);
+        return map;
+    }
+}
+```
+
+
 
 ## 待解决的问题
 1. mapper和对应的xml没有映射到的问题
