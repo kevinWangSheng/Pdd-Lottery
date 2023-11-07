@@ -39,4 +39,7 @@ public class Result implements Serializable {
     public static Result buildFailResult() {
         return new Result(Constance.ResponseCode.UN_ERROR.getCode(), Constance.ResponseCode.UN_ERROR.getDesc());
     }
+    public static Result buildFailResult(Constance.ResponseCode responseCode) {
+        return new Result(responseCode.getCode(), responseCode.getDesc());
+    }
 }

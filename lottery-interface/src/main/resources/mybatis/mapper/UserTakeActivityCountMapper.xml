@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kevin.lottery.infrastructure.dao.UserTakeActivityCountMapper">
+
+    <resultMap id="BaseResultMap" type="com.kevin.lottery.infrastructure.po.UserTakeActivityCount">
+            <result property="id" column="id" jdbcType="BIGINT"/>
+            <result property="uid" column="uId" jdbcType="VARCHAR"/>
+            <result property="activityid" column="activityId" jdbcType="BIGINT"/>
+            <result property="totalcount" column="totalCount" jdbcType="INTEGER"/>
+            <result property="leftcount" column="leftCount" jdbcType="INTEGER"/>
+            <result property="createtime" column="createTime" jdbcType="TIMESTAMP"/>
+            <result property="updatetime" column="updateTime" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,uId,activityId,
+        totalCount,leftCount,createTime,
+        updateTime
+    </sql>
+    <insert id="insertOne" parameterType="com.kevin.lottery.infrastructure.po.UserTakeActivityCount">
+        insert into user_take_activity_count
+        (
+            uId,activityId,totalCount,leftCount,createTime,updateTime
+        )
+        values(#{uid},#{activityid},#{totalcount},#{leftcount},NOW(),NOW())
+    </insert>
+    <update id="updateLeftCount" parameterType="com.kevin.lottery.infrastructure.po.UserTakeActivityCount">
+        update user_take_activity_count
+            set leftCount = leftCount -1,totalCount = totalCount+1
+        where uId = #{uid} and activityId = #{activityid} and leftCount >0
+    </update>
+    <select id="queryUserTakeActivityCount" parameterType="com.kevin.lottery.infrastructure.po.UserTakeActivityCount"
+            resultMap="BaseResultMap">
+        select totalcount,leftcount
+        from user_take_activity_count
+        where uId = #{uid} and activityId = #{activityid}
+    </select>
+</mapper>

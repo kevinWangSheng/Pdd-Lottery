@@ -9,4 +9,6 @@ import com.kevin.domain.activity.model.req.ActivityConfigReq;
 public interface IActivityDeploy {
 
     void addActivity(ActivityConfigReq req);
+
+    void updateActivity(ActivityConfigReq req);
 }

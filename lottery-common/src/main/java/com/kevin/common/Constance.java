@@ -10,10 +10,11 @@ import lombok.Getter;
 public class Constance {
 
     public enum ResponseCode{
-        SUCCESSFUL(0000,"成功"),
-        UN_ERROR(0001,"未知失败"),
-        ILEEGLE_ERROR(0002,"非法参数错误"),
-        INDEX_DUP(0003,"主键冲突");
+        SUCCESSFUL(0,"成功"),
+        UN_ERROR(500,"未知失败"),
+        ILEEGLE_ERROR(501,"非法参数错误"),
+        INDEX_DUP(100,"主键冲突"),
+        NO_UPDATE(502,"SQL操作无更新");;
         private int code;
         private String desc;
 

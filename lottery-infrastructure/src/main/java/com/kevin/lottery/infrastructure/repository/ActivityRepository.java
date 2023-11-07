@@ -1,16 +1,11 @@
 package com.kevin.lottery.infrastructure.repository;
 
 import com.kevin.common.Constance;
+import com.kevin.domain.activity.model.req.PartakeReq;
 import com.kevin.domain.activity.model.vo.*;
 import com.kevin.domain.activity.reporisitory.IActivityRepository;
-import com.kevin.lottery.infrastructure.dao.ActivityMapper;
-import com.kevin.lottery.infrastructure.dao.AwardMapper;
-import com.kevin.lottery.infrastructure.dao.StrategyDetailMapper;
-import com.kevin.lottery.infrastructure.dao.StrategyMapper;
-import com.kevin.lottery.infrastructure.po.Activity;
-import com.kevin.lottery.infrastructure.po.Award;
-import com.kevin.lottery.infrastructure.po.Strategy;
-import com.kevin.lottery.infrastructure.po.StrategyDetail;
+import com.kevin.lottery.infrastructure.dao.*;
+import com.kevin.lottery.infrastructure.po.*;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -35,6 +30,9 @@ public class ActivityRepository implements IActivityRepository{
 
     @Resource
     private StrategyDetailMapper strategyDetailMapper;
+
+    @Resource
+    private UserTakeActivityCountMapper userTakeActivityCountMapper;
     @Override
     public void addAcitivity(AcitivityVo acitivityVo) {
         if(acitivityVo == null){
@@ -79,5 +77,39 @@ public class ActivityRepository implements IActivityRepository{
         AlterStateVo alterStateVo = new AlterStateVo(acitivityId, ((Constance.ActivityState)beforeState).getCode(),((Constance.ActivityState)afterState).getCode());
 
         return activityMapper.alterStatus(alterStateVo) == 1;
+    }
+
+    @Override
+    public ActivityBilVO queryActivityBill(PartakeReq req) {
+        if(req == null){
+            return null;
+        }
+        //获取活动的参与次数
+        UserTakeActivityCount userTakeActivityCountReq = new UserTakeActivityCount();
+        userTakeActivityCountReq.setActivityid(req.getActivityId());
+        userTakeActivityCountReq.setUid(req.getUid());
+        UserTakeActivityCount userTakeActivityCount = userTakeActivityCountMapper.queryUserTakeActivityCount(userTakeActivityCountReq);
+
+        // 获取活动的参与信息
+        Activity activity = activityMapper.queryById(req.getActivityId());
+        ActivityBilVO activityBilVO = new ActivityBilVO();
+        activityBilVO.setActivityId(activity.getActivityId())
+                .setActivityName(activity.getActivityName())
+                .setState(activity.getState())
+                .setTakeCount(activity.getTakeCount()).setUid(activityBilVO.getUid())
+                .setStrategyId(activityBilVO.getStrategyId())
+                .setStockSurplusCount(activity.getStocksurpluscount())
+                .setBeginDateTime(activity.getBeginDateTime())
+                .setEndDateTime(activity.getEndDateTime())
+                .setStrategyId(activityBilVO.getStrategyId())
+                .setUid(req.getUid())
+                .setUserTakeLeftCount(null == userTakeActivityCount? null : userTakeActivityCount.getLeftcount());
+
+        return activityBilVO;
+    }
+
+    @Override
+    public int subtractionActivityStock(Long activityId) {
+        return activityMapper.subtractionActivityStock(activityId);
     }
 }

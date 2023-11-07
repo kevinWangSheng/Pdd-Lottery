@@ -66,6 +66,9 @@ public class Activity implements Serializable {
      */
     private Integer state;
 
+    private Long strategyId;
+
+    private Integer stocksurpluscount;
     public Activity(Long activityId, String activityName, String activityDesc, Date beginDateTime, Date endDateTime, Integer stockCount, Integer takeCount, Integer state, String creator) {
         this.activityId = activityId;
         this.activityName = activityName;
@@ -77,6 +80,21 @@ public class Activity implements Serializable {
         this.state = state;
         this.creator = creator;
     }
+
+    public Activity(Long activityId, String activityName, String activityDesc, Date beginDateTime, Date endDateTime, Integer stockCount, Integer takeCount, Integer state, String creator,Long strategyId,Integer stocksurpluscount) {
+        this.activityId = activityId;
+        this.activityName = activityName;
+        this.activityDesc = activityDesc;
+        this.beginDateTime = beginDateTime;
+        this.endDateTime = endDateTime;
+        this.stockCount = stockCount;
+        this.takeCount = takeCount;
+        this.state = state;
+        this.creator = creator;
+        this.strategyId = strategyId;
+        this.stocksurpluscount = stocksurpluscount;
+    }
+
 
     /**
      * 创建时间

@@ -17,6 +17,10 @@ public interface ActivityMapper extends BaseMapper<Activity> {
 
 
     int alterStatus(AlterStateVo alterStateVo);
+
+    Activity queryById(Long activityId);
+
+    int subtractionActivityStock(Long activityId);
 }
 
 

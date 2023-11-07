@@ -17,17 +17,29 @@
             <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
             <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
             <result property="creator" column="creator" jdbcType="VARCHAR"/>
+            <result property="strategyId" column="strategy_id" jdbcType="BIGINT"/>
+            <result property="stocksurpluscount" column="stock_surplus_count" jdbcType="INTEGER"/>
     </resultMap>
 
     <sql id="Base_Column_List">
         id,activity_id,activity_name,
         activity_desc,begin_date_time,end_date_time,
         stock_count,take_count,state,
-        create_time,update_time,creator
+        create_time,update_time,creator,stock_surplus_count,strategy_id
     </sql>
     <update id="alterStatus" parameterType="com.kevin.domain.activity.model.vo.AcitivityVo">
         update activity
         set state = #{afterState}
         where activity_id = #{acitivityId} and state = #{beforeState}
     </update>
+    <update id="subtractionActivityStock" parameterType="java.lang.Long">
+        update activity set stock_surplus_count = stock_surplus_count -1
+        where activity_id = #{activityId} and stock_surplus_count > 0
+    </update>
+    <select id="queryById" parameterType="java.lang.Long" resultType="com.kevin.lottery.infrastructure.po.Activity">
+        select activity_id, activity_name, activity_desc, begin_date_time, end_date_time,
+               stock_count, stock_surplus_count, take_count, strategy_id, state, creator, create_time, update_time
+        from activity
+        where activity_id = #{activityId}
+    </select>
 </mapper>
