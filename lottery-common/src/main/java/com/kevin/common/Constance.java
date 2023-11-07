@@ -14,7 +14,10 @@ public class Constance {
         UN_ERROR(500,"未知失败"),
         ILEEGLE_ERROR(501,"非法参数错误"),
         INDEX_DUP(100,"主键冲突"),
-        NO_UPDATE(502,"SQL操作无更新");;
+        LOSING_AWARD(505,"抽奖失败"),
+
+        PARAMERROR(506,"参数错误"),
+        NO_UPDATE(502,"SQL操作无更新");
         private int code;
         private String desc;
 
@@ -126,5 +129,36 @@ public class Constance {
         ShortCode,
         /** 随机算法 */
         RandomNumeric;
+    }
+
+    public enum GrantState{
+
+        INIT(0, "初始"),
+        COMPLETE(1, "完成"),
+        FAIL(2, "失败");
+
+        private Integer code;
+        private String info;
+
+        GrantState(Integer code, String info) {
+            this.code = code;
+            this.info = info;
+        }
+
+        public Integer getCode() {
+            return code;
+        }
+
+        public void setCode(Integer code) {
+            this.code = code;
+        }
+
+        public String getInfo() {
+            return info;
+        }
+
+        public void setInfo(String info) {
+            this.info = info;
+        }
     }
 }

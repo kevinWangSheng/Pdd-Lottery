@@ -62,7 +62,7 @@ public class UserStrategyExport implements Serializable {
     /**
      * 
      */
-    private Long awardid;
+    private String awardid;
 
     /**
      * 
@@ -94,13 +94,15 @@ public class UserStrategyExport implements Serializable {
      */
     private Date updatetime;
 
+    private Integer strategyMode;
+
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
 
     public UserStrategyExport() {
     }
 
-    public UserStrategyExport(Long id, String uid, Long activityid, Long orderid, Long strategyid, Integer strategytype, Integer granttype, Date grantdate, Integer grantstate, Long awardid, Integer awardtype, String awardname, String awardcontent, String uuid) {
+    public UserStrategyExport(Long id, String uid, Long activityid, Long orderid, Long strategyid, Integer strategytype, Integer granttype, Date grantdate, Integer grantstate, String awardid, Integer awardtype, String awardname, String awardcontent, String uuid) {
         this.id = id;
         this.uid = uid;
         this.activityid = activityid;

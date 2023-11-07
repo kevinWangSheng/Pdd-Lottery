@@ -15,6 +15,8 @@
             <result property="uuid" column="uuid" jdbcType="VARCHAR"/>
             <result property="createtime" column="createTime" jdbcType="TIMESTAMP"/>
             <result property="updatetime" column="updateTime" jdbcType="TIMESTAMP"/>
+            <result property="state" column="state" jdbcType="TINYINT"/>
+
     </resultMap>
 
     <sql id="Base_Column_List">
@@ -27,6 +29,10 @@
         insert into user_take_activity(id,uId,takeId,activityId,activityName,takeDate,takeCount,uuid,createTime,updateTime)
             values(#{id},#{uid},#{takeid},#{activityid},#{activityname},#{takedate},#{takecount},#{uuid},NOW(),NOW())
     </insert>
+    <update id="lockTackActivity" parameterType="com.kevin.lottery.infrastructure.po.UserTakeActivity">
+        update user_take_activity set state = 1
+        where uid = #{uid} and activityid = #{activityid} and state = 0;
+    </update>
     <select id="selectOne" parameterType="java.lang.String" resultMap="BaseResultMap">
         select id,uId,takeId,activityId,activityName,takeDate,takeCount,uuid,createTime,updateTime
         from user_take_activity

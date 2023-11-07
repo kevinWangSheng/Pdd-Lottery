@@ -16,5 +16,12 @@ public class DrawReq {
     private String userId;
     // 策略id，抽奖使用
     private Long strategyId;
+    
+    private String uuid;
+
+    public DrawReq(String userId, Long strategyId) {
+        this.userId = userId;
+        this.strategyId = strategyId;
+    }
 
 }

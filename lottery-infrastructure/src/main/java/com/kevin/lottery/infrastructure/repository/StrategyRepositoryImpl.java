@@ -58,10 +58,17 @@ public class StrategyRepositoryImpl extends ServiceImpl<StrategyMapper, Strategy
             return null;
         }
         Strategy strategy = strategyMapper.queryStrategy(strategyId);
+        if(strategy == null){
+            return null;
+        }
         List<StrategyDetail> strategyDetails = strategyDetailMapper.queryStrategyDetailList(strategyId);
 
+
         StrategyBriefVo strategyBriefVo = new StrategyBriefVo(strategy.getStrategyId(),strategy.getStrategyDesc(),strategy.getStrategyMode(),strategy.getGrantType(),strategy.getGrantDate(),strategy.getExtendInfo());
-        List<StrategyDetailBriefVo> strategyDetailBriefVoList = strategyDetails.stream().map(detail -> new StrategyDetailBriefVo(detail.getStrategyId(), detail.getAwardId(), detail.getAwardName(),detail.getAwardCount(), detail.getAwardSurplusCount(), detail.getAwardRate())).collect(Collectors.toList());
+        List<StrategyDetailBriefVo> strategyDetailBriefVoList = null;
+        if(strategyDetails != null) {
+            strategyDetailBriefVoList = strategyDetails.stream().map(detail -> new StrategyDetailBriefVo(detail.getStrategyId(), detail.getAwardId(), detail.getAwardName(), detail.getAwardCount(), detail.getAwardSurplusCount(), detail.getAwardRate())).collect(Collectors.toList());
+        }
 
         return new StrategyRich(strategyId,strategyBriefVo,strategyDetailBriefVoList);
     }
@@ -74,10 +81,11 @@ public class StrategyRepositoryImpl extends ServiceImpl<StrategyMapper, Strategy
             return  null;
         }
         AwardBriefVo awardBriefVo = new AwardBriefVo();
-        awardBriefVo.setAwardDesc(award.getAwardConent())
+        awardBriefVo.setAwardDesc(award.getAwardContent())
                 .setAwardName(award.getAwardName())
                 .setAwardId(awardId)
-                .setAwardType(award.getAwardType());
+                .setAwardType(award.getAwardType())
+                .setAwardDesc(award.getAwardContent());
         return awardBriefVo;
     }
 

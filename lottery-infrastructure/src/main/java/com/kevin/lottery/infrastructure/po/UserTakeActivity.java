@@ -70,6 +70,8 @@ public class UserTakeActivity implements Serializable {
      */
     private Date updatetime;
 
+    private Integer state;
+
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
 

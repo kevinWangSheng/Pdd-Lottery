@@ -21,6 +21,8 @@ public interface UserStrategyExportMapper extends BaseMapper<UserStrategyExport>
 
     @DBRouter(key = "uid")
     void insertSelective (UserStrategyExport userStrategyExport);
+
+
 }
 
 

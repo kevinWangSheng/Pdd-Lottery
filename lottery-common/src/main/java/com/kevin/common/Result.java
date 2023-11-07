@@ -24,6 +24,10 @@ public class Result implements Serializable {
         return  new Result(code,info);
     }
 
+    public static Result buildResult(Constance.ResponseCode responseCode) {
+        return  new Result(responseCode.getCode(),responseCode.getDesc());
+    }
+
     public static Result buildResult(Constance.ResponseCode responseCode,String info) {
         return new Result(responseCode.getCode(), info);
     }

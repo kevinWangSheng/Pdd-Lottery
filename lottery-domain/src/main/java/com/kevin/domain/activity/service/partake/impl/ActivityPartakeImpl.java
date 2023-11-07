@@ -1,12 +1,13 @@
-package com.kevin.domain.activity.service.partake;
+package com.kevin.domain.activity.service.partake.impl;
 
 import cn.bugstack.middleware.db.router.strategy.IDBRouterStrategy;
 import com.kevin.common.Constance;
 import com.kevin.common.Result;
 import com.kevin.domain.activity.model.req.PartakeReq;
-import com.kevin.domain.activity.model.resp.PartakeResult;
 import com.kevin.domain.activity.model.vo.ActivityBilVO;
+import com.kevin.domain.activity.model.vo.DrawOrderVO;
 import com.kevin.domain.activity.reporisitory.UserTakeActivityRepository;
+import com.kevin.domain.activity.service.partake.BaseActivityPartake;
 import com.kevin.domain.support.ids.IIDGenerate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,7 +22,7 @@ import java.util.Map;
  * @create 2023-11-07-14:51
  */
 @Service
-public class ActivityPartakeImpl extends BaseActivityPartake{
+public class ActivityPartakeImpl extends BaseActivityPartake {
     private final Logger logger = LoggerFactory.getLogger(ActivityPartakeImpl.class);
 
     @Resource
@@ -81,6 +82,37 @@ public class ActivityPartakeImpl extends BaseActivityPartake{
                     status.setRollbackOnly();
                     logger.error("领取活动，唯一索引冲突 activityId：{} uId：{}", partake.getActivityId(), partake.getUid(), e);
                     return Result.buildFailResult(Constance.ResponseCode.INDEX_DUP);
+                }
+                return Result.buildSuccessResult();
+            });
+        } finally {
+            dbRouter.clear();
+        }
+    }
+
+    /**
+     * 记录抽奖订单
+     * @param drawOrderVO
+     * @return
+     */
+    @Override
+    public Result recordDrawOrder(DrawOrderVO drawOrderVO) {
+        try {
+            dbRouter.doRouter(drawOrderVO.getUId());
+            return transactionTemplate.execute(state->{
+                try {
+                    int lockCount = userTakeActivityRepository.lockTracActivity(drawOrderVO.getUId(),drawOrderVO.getActivityId(),drawOrderVO.getTakeId());
+                    if(0 == lockCount){
+                        state.setRollbackOnly();
+                        logger.error("记录中奖单，个人参与活动抽奖已消耗完 activityId：{} uId：{}", drawOrderVO.getActivityId(), drawOrderVO.getUId());
+                        return Result.buildFailResult(Constance.ResponseCode.NO_UPDATE);
+                    }
+                    // 保存抽奖信息
+                    userTakeActivityRepository.saveUserStrategyExport(drawOrderVO);
+                } catch (Exception e) {
+                    state.setRollbackOnly();
+                    logger.error("记录中奖单，唯一索引冲突 activityId：{} uId：{}", drawOrderVO.getActivityId(), drawOrderVO.getUId(), e);
+                    return Result.buildResult(Constance.ResponseCode.INDEX_DUP);
                 }
                 return Result.buildSuccessResult();
             });

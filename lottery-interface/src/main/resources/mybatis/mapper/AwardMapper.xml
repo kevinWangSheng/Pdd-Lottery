@@ -10,7 +10,7 @@
             <result property="awardType" column="award_type" jdbcType="INTEGER"/>
             <result property="awardCount" column="award_count" jdbcType="INTEGER"/>
             <result property="awardName" column="award_name" jdbcType="VARCHAR"/>
-            <result property="awardConent" column="award_conent" jdbcType="VARCHAR"/>
+            <result property="awardContent" column="award_content" jdbcType="VARCHAR"/>
             <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
             <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
     </resultMap>

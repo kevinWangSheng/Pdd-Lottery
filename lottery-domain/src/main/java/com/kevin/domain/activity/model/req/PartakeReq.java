@@ -15,6 +15,7 @@ public class PartakeReq {
 
     private Date partakeDate;
 
+
     public PartakeReq(String uid, Long activityId, Date partakeDate) {
         this.uid = uid;
         this.activityId = activityId;
@@ -25,6 +26,8 @@ public class PartakeReq {
         this.uid = uid;
         this.activityId = activityId;
     }
+
+
 
     public PartakeReq() {
     }

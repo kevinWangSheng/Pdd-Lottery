@@ -97,13 +97,12 @@ public class ActivityRepository implements IActivityRepository{
                 .setActivityName(activity.getActivityName())
                 .setState(activity.getState())
                 .setTakeCount(activity.getTakeCount()).setUid(activityBilVO.getUid())
-                .setStrategyId(activityBilVO.getStrategyId())
+                .setStrategyId(activity.getStrategyId())
                 .setStockSurplusCount(activity.getStocksurpluscount())
                 .setBeginDateTime(activity.getBeginDateTime())
                 .setEndDateTime(activity.getEndDateTime())
-                .setStrategyId(activityBilVO.getStrategyId())
                 .setUid(req.getUid())
-                .setUserTakeLeftCount(null == userTakeActivityCount? null : userTakeActivityCount.getLeftcount());
+                .setUserTakeLeftCount(null == userTakeActivityCount? 0 : userTakeActivityCount.getLeftcount());
 
         return activityBilVO;
     }

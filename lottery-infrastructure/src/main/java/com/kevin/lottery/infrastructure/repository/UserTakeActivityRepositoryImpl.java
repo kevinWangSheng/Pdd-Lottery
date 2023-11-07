@@ -1,9 +1,12 @@
 package com.kevin.lottery.infrastructure.repository;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.kevin.domain.activity.model.vo.DrawOrderVO;
 import com.kevin.domain.activity.reporisitory.UserTakeActivityRepository;
+import com.kevin.lottery.infrastructure.dao.UserStrategyExportMapper;
 import com.kevin.lottery.infrastructure.dao.UserTakeActivityCountMapper;
 import com.kevin.lottery.infrastructure.dao.UserTakeActivityMapper;
+import com.kevin.lottery.infrastructure.po.UserStrategyExport;
 import com.kevin.lottery.infrastructure.po.UserTakeActivity;
 import com.kevin.lottery.infrastructure.po.UserTakeActivityCount;
 import org.springframework.stereotype.Service;
@@ -25,6 +28,9 @@ public class UserTakeActivityRepositoryImpl extends ServiceImpl<UserTakeActivity
 
     @Resource
     private UserTakeActivityCountMapper userTakeActivityCountMapper;
+
+    @Resource
+    private UserStrategyExportMapper userStrategyExportMapper;
 
     @Override
     public int subtractionLeftCount(Long activityId, String activityName, Integer takeCount, Integer userTakeLeftCount, String uId, Date partakeDate) {
@@ -61,6 +67,37 @@ public class UserTakeActivityRepositoryImpl extends ServiceImpl<UserTakeActivity
         userTakeActivity.setUuid(uuid);
 
         userTakeActivityMapper.insertOne(userTakeActivity);
+    }
+
+    @Override
+    public int lockTracActivity(String uId, Long activityId, Long takeId) {
+        UserTakeActivity userTakeActivity = new UserTakeActivity();
+
+        userTakeActivity.setTakeid(takeId);
+        userTakeActivity.setUid(uId);
+        userTakeActivity.setActivityid(activityId);
+
+        return userTakeActivityMapper.lockTackActivity(userTakeActivity);
+    }
+
+    @Override
+    public void saveUserStrategyExport(DrawOrderVO drawOrder) {
+        UserStrategyExport userStrategyExport = new UserStrategyExport();
+        userStrategyExport.setUid(drawOrder.getUId());
+        userStrategyExport.setActivityid(drawOrder.getActivityId());
+        userStrategyExport.setOrderid(drawOrder.getOrderId());
+        userStrategyExport.setStrategyid(drawOrder.getStrategyId());
+        userStrategyExport.setStrategyMode(drawOrder.getStrategyMode());
+        userStrategyExport.setGranttype(drawOrder.getGrantType());
+        userStrategyExport.setGrantdate(drawOrder.getGrantDate());
+        userStrategyExport.setGrantstate(drawOrder.getGrantState());
+        userStrategyExport.setAwardid(drawOrder.getAwardId());
+        userStrategyExport.setAwardtype(drawOrder.getAwardType());
+        userStrategyExport.setAwardname(drawOrder.getAwardName());
+        userStrategyExport.setAwardcontent(drawOrder.getAwardContent());
+        userStrategyExport.setUuid(String.valueOf(drawOrder.getOrderId()));
+
+        userStrategyExportMapper.insertSelective(userStrategyExport);
     }
 }
 

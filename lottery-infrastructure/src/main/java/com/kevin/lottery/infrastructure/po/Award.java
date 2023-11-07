@@ -51,7 +51,7 @@ public class Award implements Serializable {
     /**
      * 奖品内容 [文字描述，key，码]
      */
-    private String awardConent;
+    private String awardContent;
 
     /**
      * 创建时间
@@ -66,19 +66,19 @@ public class Award implements Serializable {
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
 
-    public Award(String awardId, Integer awardType, Integer awardCount, String awardName, String awardConent) {
+    public Award(String awardId, Integer awardType, Integer awardCount, String awardName, String awardContent) {
         this.awardId = awardId;
         this.awardType = awardType;
         this.awardCount = awardCount;
         this.awardName = awardName;
-        this.awardConent = awardConent;
+        this.awardContent = awardContent;
     }
 
-    public Award(String awardId, Integer awardType, String awardName, String awardConent) {
+    public Award(String awardId, Integer awardType, String awardName, String awardContent) {
         this.awardId = awardId;
         this.awardType = awardType;
         this.awardName = awardName;
-        this.awardConent = awardConent;
+        this.awardContent = awardContent;
     }
     @Override
     public boolean equals(Object that) {
@@ -97,7 +97,7 @@ public class Award implements Serializable {
             && (this.getAwardType() == null ? other.getAwardType() == null : this.getAwardType().equals(other.getAwardType()))
             && (this.getAwardCount() == null ? other.getAwardCount() == null : this.getAwardCount().equals(other.getAwardCount()))
             && (this.getAwardName() == null ? other.getAwardName() == null : this.getAwardName().equals(other.getAwardName()))
-            && (this.getAwardConent() == null ? other.getAwardConent() == null : this.getAwardConent().equals(other.getAwardConent()))
+            && (this.getAwardContent() == null ? other.getAwardContent() == null : this.getAwardContent().equals(other.getAwardContent()))
             && (this.getCreateTime() == null ? other.getCreateTime() == null : this.getCreateTime().equals(other.getCreateTime()))
             && (this.getUpdateTime() == null ? other.getUpdateTime() == null : this.getUpdateTime().equals(other.getUpdateTime()));
     }
@@ -111,7 +111,7 @@ public class Award implements Serializable {
         result = prime * result + ((getAwardType() == null) ? 0 : getAwardType().hashCode());
         result = prime * result + ((getAwardCount() == null) ? 0 : getAwardCount().hashCode());
         result = prime * result + ((getAwardName() == null) ? 0 : getAwardName().hashCode());
-        result = prime * result + ((getAwardConent() == null) ? 0 : getAwardConent().hashCode());
+        result = prime * result + ((getAwardContent() == null) ? 0 : getAwardContent().hashCode());
         result = prime * result + ((getCreateTime() == null) ? 0 : getCreateTime().hashCode());
         result = prime * result + ((getUpdateTime() == null) ? 0 : getUpdateTime().hashCode());
         return result;
@@ -128,7 +128,7 @@ public class Award implements Serializable {
         sb.append(", awardType=").append(awardType);
         sb.append(", awardCount=").append(awardCount);
         sb.append(", awardName=").append(awardName);
-        sb.append(", awardConent=").append(awardConent);
+        sb.append(", awardConent=").append(awardContent);
         sb.append(", createTime=").append(createTime);
         sb.append(", updateTime=").append(updateTime);
         sb.append(", serialVersionUID=").append(serialVersionUID);

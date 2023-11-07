@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import java.io.Serializable;
 import java.util.Date;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * 策略配置
@@ -14,6 +15,7 @@ import lombok.Data;
  */
 @TableName(value ="strategy")
 @Data
+@NoArgsConstructor
 public class Strategy implements Serializable {
     /**
      * 自增id
@@ -65,6 +67,18 @@ public class Strategy implements Serializable {
      * 更新时间
      */
     private Date updateTime;
+
+    public Strategy(Long id, Long strategyId, String strategyDesc, Integer strategyMode, Integer grantType, Date grantDate, String extendInfo, Date createTime, Date updateTime) {
+        this.id = id;
+        this.strategyId = strategyId;
+        this.strategyDesc = strategyDesc;
+        this.strategyMode = strategyMode;
+        this.grantType = grantType;
+        this.grantDate = grantDate;
+        this.extendInfo = extendInfo;
+        this.createTime = createTime;
+        this.updateTime = updateTime;
+    }
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;

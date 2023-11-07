@@ -21,6 +21,7 @@ public interface UserTakeActivityMapper extends BaseMapper<UserTakeActivity> {
     @DBRouter(key = "uid")
     UserTakeActivity  selectOne(String uid);
 
+    int lockTackActivity(UserTakeActivity userTakeActivity);
 }
 
 

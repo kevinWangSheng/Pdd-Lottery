@@ -1,6 +1,8 @@
 package com.kevin.domain.activity.reporisitory;
 
 
+import com.kevin.domain.activity.model.vo.DrawOrderVO;
+
 import java.util.Date;
 
 /**
@@ -32,4 +34,8 @@ public interface UserTakeActivityRepository {
      * @param takeId 领取id
      */
     void takeActivity(Long activityId, String activityName, Integer takeCount, Integer userTakeLeftCount, String uId, Date takeDate, Long takeId);
+
+    int lockTracActivity(String uId, Long strategyId, Long takeId);
+
+    void saveUserStrategyExport(DrawOrderVO drawOrderVO);
 }

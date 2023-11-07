@@ -42,8 +42,8 @@
         where strategy_id = #{strategyId} and award_id = #{awardId} and award_surplus_count > 0
     </update>
     <select id="queryStrategyDetailList" resultType="com.kevin.lottery.infrastructure.po.StrategyDetail">
-        select id,strategy_id,award_id,award_count,award_rate,award_surplus_count,award_desc,
+        select id,strategy_id,award_id,award_count,award_rate,award_surplus_count,
                create_time,update_time
-        from strategy_detail where strategy_id = #{strategy_id}
+        from strategy_detail where strategy_id = #{strategyId}
     </select>
 </mapper>

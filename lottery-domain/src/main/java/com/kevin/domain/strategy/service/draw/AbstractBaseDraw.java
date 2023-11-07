@@ -47,6 +47,9 @@ public abstract class AbstractBaseDraw extends DrawStrategySupport implements ID
     @Override
     public DrawResp doDrawExec(DrawReq drawreq) {
         StrategyRich strategyRich = super.queryStrategyByStrategyId(drawreq.getStrategyId());
+        if (strategyRich == null) {
+            return new DrawResp(drawreq.getUserId(),drawreq.getStrategyId(), Constance.DrawState.FAIL.getCode());
+        }
         // 1.获取进行策略
         StrategyBriefVo strategy = strategyRich.getStrategy();
         IDrawAlgorithm drawAlgorithm = drawAlgorithmMap.get(strategy.getStrategyMode());
@@ -57,17 +60,18 @@ public abstract class AbstractBaseDraw extends DrawStrategySupport implements ID
         // 4.执行抽奖算法
         String awardId = this.drawAlgorithm(drawreq.getStrategyId(),drawAlgorithm,exculdStrategyDetails);
         // 5.包装抽奖结果
-        return buildDrawResult(drawreq.getUserId(),drawreq.getStrategyId(),awardId);
+        return buildDrawResult(drawreq.getUserId(),drawreq.getStrategyId(),awardId,strategy);
     }
 
-    private  DrawResp buildDrawResult(String userId, Long strategyId, String awardId){
+    private  DrawResp buildDrawResult(String userId, Long strategyId, String awardId,StrategyBriefVo strategyBriefVo){
         if(StringUtils.isBlank(awardId)){
             logger.info("执行抽奖策略完成，【未中奖】，用户id:{},策略id:{}",userId,strategyId);
             return new DrawResp(userId,strategyId, Constance.DrawState.FAIL.getCode());
         }
         AwardBriefVo award = super.queryAward(awardId);
         logger.info("执行策略抽奖完成【已中奖】，用户：{} 策略ID：{} 奖品ID：{} 奖品名称：{}", userId, strategyId, awardId, award.getAwardName());
-        return new DrawResp(userId, strategyId, Constance.DrawState.SUCCESS.getCode(),new DrawAwardInfo(awardId,award.getAwardName(),award.getAwardDesc(),award.getAwardType()));
+        DrawAwardInfo drawAwardInfo = new DrawAwardInfo(awardId,award.getAwardName(),award.getAwardDesc(),award.getAwardType(),strategyBriefVo.getStrategyMode(),strategyBriefVo.getGrantType(),strategyBriefVo.getGrantDate());
+        return new DrawResp(userId, strategyId, Constance.DrawState.SUCCESS.getCode(), drawAwardInfo);
     }
 
     protected abstract String drawAlgorithm(Long strategyId, IDrawAlgorithm drawAlgorithm, List<String> exculdStrategyDetails);

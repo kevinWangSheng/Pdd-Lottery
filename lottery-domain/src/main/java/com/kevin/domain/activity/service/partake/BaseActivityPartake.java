@@ -5,7 +5,6 @@ import com.kevin.common.Result;
 import com.kevin.domain.activity.model.req.PartakeReq;
 import com.kevin.domain.activity.model.resp.PartakeResult;
 import com.kevin.domain.activity.model.vo.ActivityBilVO;
-import org.springframework.stereotype.Service;
 
 
 public abstract class BaseActivityPartake extends ActivityPartakeSupport implements  IActivityPartake{
@@ -36,6 +35,14 @@ public abstract class BaseActivityPartake extends ActivityPartakeSupport impleme
         return partakeResult;
     }
 
+
+
+    private PartakeResult buildPartakeResult(Long strategyId, Long takeId) {
+        PartakeResult partakeResult = new PartakeResult(Constance.ResponseCode.SUCCESSFUL.getCode(), Constance.ResponseCode.SUCCESSFUL.getDesc());
+        partakeResult.setStrategyId(strategyId);
+        partakeResult.setTakeId(takeId);
+        return partakeResult;
+    }
     /**
      * 活动信息校验处理，把活动库存、状态、日期、个人参与次数
      *
