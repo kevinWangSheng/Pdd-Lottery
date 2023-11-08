@@ -17,9 +17,11 @@ public class Constance {
         LOSING_AWARD(505,"抽奖失败"),
 
         PARAMERROR(506,"参数错误"),
+        UNLL_ERROR(507,"空指针错误"),
         NO_UPDATE(502,"SQL操作无更新");
         private int code;
         private String desc;
+
 
 
 
@@ -47,6 +49,8 @@ public class Constance {
             this.desc = desc;
         }
     }
+
+
 
     @Getter
     @AllArgsConstructor
@@ -161,4 +165,47 @@ public class Constance {
             this.info = info;
         }
     }
+
+
+    public static final class Global {
+        /** 空节点值 */
+        public static final Long TREE_NULL_NODE = 0L;
+    }
+
+    public static final class RuleLimitType {
+        /** 等于 */
+        public static final int EQUAL = 1;
+        /** 大于 */
+        public static final int GT = 2;
+        /** 小于 */
+        public static final int LT = 3;
+        /** 大于&等于 */
+        public static final int GE = 4;
+        /** 小于&等于 */
+        public static final int LE = 5;
+        /** 枚举 */
+        public static final int ENUM = 6;
+    }
+
+    /**
+     * 决策树节点
+     */
+    public static final class NodeType{
+        /** 树茎 */
+        public static final Integer STEM = 1;
+        /** 果实 */
+        public static final Integer FRUIT = 2;
+    }
+
+    public static class Matter{
+        public static String GENDER = "gender";
+
+        public static String AGE = "age";
+
+        public static String USER_AGE = "userAge";
+
+        public static String USER_GENDER = "userGender";
+    }
+
+
 }

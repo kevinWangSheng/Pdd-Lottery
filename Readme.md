@@ -240,12 +240,63 @@ public class IDContext {
 }
 ```
 ### 整个抽奖流程的逻辑
+
 ![img.png](imgs/img_5.png)
 这里使用了一个MQ来处理解耦，同时进行异步处理，让他这个流程处理下来不会因为抽奖的某一个步骤卡主，整个接口就卡住
 ，对他进行异步处理，暂时解耦，先把接口返回回去，然后在对一些异步步骤使用消息来进行处理，这样既能够保证整个接口的响应速度和解耦
 
+### 使用流程对抽奖人进行筛选
+根据对应的条件，对参与抽奖的人提供条件，满足条件的人才能够进行抽奖。
+这里使用了一个类似引擎的处理流程来处理抽奖过滤，类似树的结构
+其中需要建三张表
+一张表是对应的根节点，也就是树节点
+对应如下
+```sql
+CREATE TABLE `rule_tree` (
+  `id` bigint NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+  `tree_name` varchar(64) DEFAULT NULL COMMENT '规则树Id',
+  `tree_desc` varchar(128) DEFAULT NULL COMMENT '规则树描述',
+  `tree_root_node_id` bigint DEFAULT NULL COMMENT '规则树根ID',
+  `create_time` datetime DEFAULT NULL COMMENT '创建时间',
+  `update_time` datetime DEFAULT NULL COMMENT '更新时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2110081903 DEFAULT CHARSET=utf8mb3;
+```
 
-
+下一张表是对应的树结构，只是单纯的树结构，以及存储对应的用于过滤的key
+```sql
+CREATE TABLE `rule_tree_node` (
+  `id` bigint NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+  `tree_id` int DEFAULT NULL COMMENT '规则树ID',
+  `node_type` int DEFAULT NULL COMMENT '节点类型；1子叶、2果实',
+  `node_value` varchar(32) DEFAULT NULL COMMENT '节点值[nodeType=2]；果实值',
+  `rule_key` varchar(16) DEFAULT NULL COMMENT '规则Key',
+  `rule_desc` varchar(32) DEFAULT NULL COMMENT '规则描述',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=123 DEFAULT CHARSET=utf8mb3;
+```
+最后一张表承接上面第二张表，存储他的对应的值和用于判断的大小类型，是大于还是小于等。
+```sql
+   CREATE TABLE `rule_tree_node_line` (
+                                         `id` bigint NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+                                         `tree_id` bigint DEFAULT NULL COMMENT '规则树ID',
+                                         `node_id_from` bigint DEFAULT NULL COMMENT '节点From',
+                                         `node_id_to` bigint DEFAULT NULL COMMENT '节点To',
+                                         `rule_limit_type` int DEFAULT NULL COMMENT '限定类型；1:=;2:>;3:<;4:>=;5<=;6:enum[枚举范围];7:果实',
+                                         `rule_limit_value` varchar(32) DEFAULT NULL COMMENT '限定值',
+                                         PRIMARY KEY (`id`)
+   ) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb3;
+```
+#### 具体的流程是这样的
+首先根据对应的treeId，查出对应的树节点，也就是跟节点，然后在根据根节点的规则树id，叶就是属于他的子节点id，把全部的
+子节点都查询出来，封装太一个List里面，然后在根据这个list进行遍历查询他对应的判断类型，判断值，也就是第三张表。
+然后可以封装成为一个map，key是他对应的节点的id，value是他这个节点对应用于判断的值和判断的类型。
+因为他这些节点的有一个id_to字段，所以可以找到他最后面的一个节点，最后面的节点把他设置成为果实节点，也就是存放对应的活动id的地方，
+通过不断的往下遍历，并且在遍历的过程中不断判断对应的类型和类型值进行对应的在过滤，最终找到的果实节点，他的`node_value`就是对应的活动的id
+这样就能够在对一些人群进行匹配抽奖条件。完成过滤。
+对应的结构树如下
+![img.png](imgs/img_6.png)
+获取到最后的节点的活动id就可以进行对应的抽奖操作了。
 ## 待解决的问题
 1. mapper和对应的xml没有映射到的问题
    2. 这个你需要注意查看你使用的是mybatis还是mybatis-plus，如果你使用的是plus，应该是配置专属于plus的，而不是mybatis，否则他映射不到，具体看你使用的是plus的stater还是mybatis的stater
