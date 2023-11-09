@@ -16,7 +16,7 @@ public class RedeemCodeGoods extends DistributionBase implements DistributionGoo
     @Override
     public DistributionRes doDistribution(GoodReq goodReq) {
         logger.info("模拟调用兑换码发奖 uId：{} awardContent：{}", goodReq.getUserId(), goodReq.getAwardContent());
-        super.updateUserAwardState(goodReq.getUserId(), goodReq.getAwardId(), Constance.AwardState.SUCCESS.getCode(),goodReq.getOrderId(),Constance.AwardState.SUCCESS.getInfo());
+        super.updateUserAwardState(goodReq.getUserId(), goodReq.getAwardId(), goodReq.getOrderId(),Constance.GrantState.COMPLETE.getCode());
         return new DistributionRes(goodReq.getUserId(),Constance.AwardState.SUCCESS.getCode(),Constance.AwardState.SUCCESS.getInfo());
     }
 

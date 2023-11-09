@@ -18,7 +18,7 @@ public class GoodReq{
     // 用户id
     private String userId;
     // 订单id
-    private String orderId;
+    private Long orderId;
     // 奖品id
     private String awardId;
     // 奖品名称
@@ -32,7 +32,7 @@ public class GoodReq{
     // 其他信息
     private String extendInfo;
 
-    public GoodReq(String userId, String orderId, String awardId, String awardName, String awardContent, String orderStatus) {
+    public GoodReq(String userId, Long orderId, String awardId, String awardName, String awardContent, String orderStatus) {
         this.userId = userId;
         this.orderId = orderId;
         this.awardId = awardId;
@@ -41,7 +41,7 @@ public class GoodReq{
         this.orderStatus = orderStatus;
     }
 
-    public GoodReq(String userId, String orderId, String awardId, String awardName, String awardContent, String orderStatus, String extendInfo) {
+    public GoodReq(String userId, Long orderId, String awardId, String awardName, String awardContent, String orderStatus, String extendInfo) {
         this.userId = userId;
         this.orderId = orderId;
         this.awardId = awardId;
@@ -51,7 +51,7 @@ public class GoodReq{
         this.extendInfo = extendInfo;
     }
 
-    public GoodReq(String userId, String orderId, String awardId, String awardName, String awardContent) {
+    public GoodReq(String userId, Long orderId, String awardId, String awardName, String awardContent) {
         this.userId = userId;
         this.orderId = orderId;
         this.awardId = awardId;

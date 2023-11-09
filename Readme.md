@@ -500,3 +500,17 @@ public interface AwardMapping  extends IMapping<DrawAwardVO, AwardDto> {
 1. mapper和对应的xml没有映射到的问题
    2. 这个你需要注意查看你使用的是mybatis还是mybatis-plus，如果你使用的是plus，应该是配置专属于plus的，而不是mybatis，否则他映射不到，具体看你使用的是plus的stater还是mybatis的stater
 2. mybatis-plus写代码，多了以后，会不会变得混乱，是否直接使用mapper层进行执行对应的方法会更好呢？
+
+## 记录的错误
+1. kafka在配置的时候使用：listeners=PLAINTEXT://10.127.96.151:9092
+这后面的端口号尽量写真实的端口号，而不是使用127.0.0.1或者localhost
+
+
+### 使用过程中出现的错误
+#### 使用kafka的时候出现的问题和解决方法
+Commit cannot be completed since the group has already rebalanced and assigned the partitions to another member. This means that the time between subsequent calls to poll() was longer than the configured max.poll.interval.ms, which typically implies that the poll loop is spending too much time message processing. You can address this either by increasing max.poll.interval.ms or by reducing the maximum size of batches returned in poll() with max.poll.records.
+ 
+**出现的原因**：这个组已经移交给另一个成员了，因此无法提交完成，然后之后连续调用的poll之间的时间比配置的最大时间长，所以就会出现这种现象
+**解决办法**：按照上面的提示，将这两个参数设置大一点max.poll.interval.ms和max.poll.records
+
+#### 消息重复的原因

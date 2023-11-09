@@ -4,7 +4,9 @@ import com.kevin.common.Constance;
 import com.kevin.domain.activity.model.req.PartakeReq;
 import com.kevin.domain.activity.model.resp.PartakeResult;
 import com.kevin.domain.activity.model.vo.DrawOrderVO;
+import com.kevin.domain.activity.model.vo.InvoiceVO;
 import com.kevin.domain.activity.service.partake.IActivityPartake;
+import com.kevin.domain.award.model.vo.ShippingAddress;
 import com.kevin.domain.rule.model.req.DecisionMatterReq;
 import com.kevin.domain.rule.model.rsep.EngineResult;
 import com.kevin.domain.rule.repository.IRuleRespository;
@@ -14,11 +16,18 @@ import com.kevin.domain.strategy.model.resp.DrawResp;
 import com.kevin.domain.strategy.model.vo.DrawAwardVO;
 import com.kevin.domain.strategy.service.draw.IDrawExec;
 import com.kevin.domain.support.ids.IIDGenerate;
+import com.kevin.lottery.application.mq.producer.KafkaProducer;
 import com.kevin.lottery.application.process.IActivityProcess;
 import com.kevin.lottery.application.process.req.DrawProcessReq;
 import com.kevin.lottery.application.process.resp.DrawProcessResp;
 import com.kevin.lottery.application.process.resp.RuleQuantificationCrowdResult;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.kafka.support.SendResult;
 import org.springframework.stereotype.Service;
+import org.springframework.util.concurrent.ListenableFuture;
+import org.springframework.util.concurrent.ListenableFutureCallback;
 
 import javax.annotation.Resource;
 import java.util.Date;
@@ -30,6 +39,8 @@ import java.util.Map;
  */
 @Service
 public class ActivityProcessImpl implements IActivityProcess {
+
+    private final Logger logger = LoggerFactory.getLogger(ActivityProcessImpl.class);
 
     @Resource
     private IActivityPartake activityPartake;
@@ -44,29 +55,47 @@ public class ActivityProcessImpl implements IActivityProcess {
     private IRuleRespository ruleRespository;
 
     @Resource
+    private KafkaProducer kafkaProducer;
+
+    @Resource
     private EngineFilter engineFilter;
     @Override
     public DrawProcessResp doDrawProcess(DrawProcessReq req) {
         if(req == null){
             return new DrawProcessResp(Constance.ResponseCode.PARAMERROR);
         }
-        // 领取任务
+        // 1.领取任务
         PartakeResult partakeResult = activityPartake.doPartake(new PartakeReq(req.getUId(), req.getActivityId(),new Date()));
         if(Constance.ResponseCode.SUCCESSFUL.getCode() != partakeResult.getCode()){
             return new DrawProcessResp(partakeResult.getCode(),partakeResult.getInfo());
         }
 
-        // 执行抽奖
+        // 2.执行抽奖
         DrawResp drawResp = drawExec.doDrawExec(new DrawReq(req.getUId(), req.getActivityId(),String.valueOf(partakeResult.getTakeId())));
         if(Constance.DrawState.FAIL.getCode().equals(drawResp.getDrawState())){
             return new DrawProcessResp(Constance.ResponseCode.LOSING_AWARD.getCode(),Constance.ResponseCode.LOSING_AWARD.getDesc());
         }
 
-        // 结果落库
-        activityPartake.recordDrawOrder(buildDrawOrderVO(req,partakeResult.getStrategyId(),partakeResult.getTakeId(),drawResp.getDrawAwardVO()));
+        // 3.结果落库
+        DrawOrderVO drawOrderVO = buildDrawOrderVO(req, partakeResult.getStrategyId(), partakeResult.getTakeId(), drawResp.getDrawAwardVO());
+        activityPartake.recordDrawOrder(drawOrderVO);
 
-        //发送MQ,触发抽奖流程
+        //4. 发送MQ,触发抽奖流程
+        InvoiceVO invoiceVO = buildInvoiceVO(drawOrderVO);
+        ListenableFuture<SendResult<String, Object>> future = kafkaProducer.send(invoiceVO);
 
+        future.addCallback(new ListenableFutureCallback<SendResult<String, Object>>() {
+            // 4.1 MQ 消息发送完成，更新数据库表 user_strategy_export.mq_state = 1
+            @Override
+            public void onFailure(Throwable ex) {
+                activityPartake.updateInvoiceMqState(req.getUId(),invoiceVO.getOrderId(),Constance.MQState.COMPLETE.getCode());
+            }
+            // 4.2 MQ 消息发送失败，更新数据库表 user_strategy_export.mq_state = 2 【等待定时任务扫码补偿MQ消息】
+            @Override
+            public void onSuccess(SendResult<String, Object> result) {
+                activityPartake.updateInvoiceMqState(req.getUId(),invoiceVO.getOrderId(),Constance.MQState.FAIL.getCode());
+            }
+        });
         //返回结果
         return new DrawProcessResp(Constance.ResponseCode.SUCCESSFUL.getCode(), Constance.ResponseCode.SUCCESSFUL.getDesc(),drawResp.getDrawAwardVO());
     }
@@ -104,5 +133,19 @@ public class ActivityProcessImpl implements IActivityProcess {
         drawOrderVO.setTakeId(takeId);
 
         return drawOrderVO;
+    }
+
+    private InvoiceVO buildInvoiceVO(DrawOrderVO orderVO) {
+        InvoiceVO invoiceVO = new InvoiceVO();
+        invoiceVO.setAwardContent(orderVO.getAwardContent());
+        invoiceVO.setAwardId(orderVO.getAwardId());
+        invoiceVO.setuId(orderVO.getUId());
+        invoiceVO.setAwardName(orderVO.getAwardName());
+        invoiceVO.setAwardType(orderVO.getAwardType());
+        invoiceVO.setOrderId(orderVO.getOrderId());
+        invoiceVO.setShippingAddress(null);
+        invoiceVO.setExtInfo(null);
+
+        return invoiceVO;
     }
 }

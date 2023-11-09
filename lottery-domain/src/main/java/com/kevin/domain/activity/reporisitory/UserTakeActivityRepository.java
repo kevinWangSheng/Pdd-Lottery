@@ -38,4 +38,6 @@ public interface UserTakeActivityRepository {
     int lockTracActivity(String uId, Long strategyId, Long takeId);
 
     void saveUserStrategyExport(DrawOrderVO drawOrderVO);
+
+    void updateInvoiceMqState(String uId, Long orderId, Integer mqState);
 }

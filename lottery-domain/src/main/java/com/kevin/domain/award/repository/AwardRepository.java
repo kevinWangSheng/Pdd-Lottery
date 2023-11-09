@@ -11,6 +11,6 @@ package com.kevin.domain.award.repository;
 public interface AwardRepository  {
 
 
+    void updateUserAwardState(String uId, Long orderId, String awardId, Integer grantState);
 
-    // TODO 对分库分表中的用户中奖纪录操作
 }

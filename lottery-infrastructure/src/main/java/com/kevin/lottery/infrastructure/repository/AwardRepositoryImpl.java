@@ -1,8 +1,12 @@
 package com.kevin.lottery.infrastructure.repository;
 
 import com.kevin.domain.award.repository.AwardRepository;
+import com.kevin.lottery.infrastructure.dao.UserStrategyExportMapper;
+import com.kevin.lottery.infrastructure.po.UserStrategyExport;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
+
+import javax.annotation.Resource;
 
 /**
 * @author wang sheng hui
@@ -12,7 +16,18 @@ import org.springframework.stereotype.Service;
 @Component
 public class AwardRepositoryImpl implements AwardRepository {
 
+    @Resource
+    private UserStrategyExportMapper userStrategyExportMapper;
+    @Override
+    public void updateUserAwardState(String uId, Long orderId, String awardId, Integer grantState) {
+        UserStrategyExport userStrategyExport = new UserStrategyExport();
+        userStrategyExport.setUid(uId);
+        userStrategyExport.setOrderid(orderId);
+        userStrategyExport.setAwardid(awardId);
+        userStrategyExport.setGrantstate(grantState);
 
+        userStrategyExportMapper.updateAwardState(userStrategyExport);
+    }
 }
 
 

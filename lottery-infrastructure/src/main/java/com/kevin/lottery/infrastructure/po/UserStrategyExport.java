@@ -96,6 +96,8 @@ public class UserStrategyExport implements Serializable {
 
     private Integer strategyMode;
 
+    private Integer mqState;
+
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
 

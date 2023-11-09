@@ -22,13 +22,14 @@
             <result property="createtime" column="createTime" jdbcType="TIMESTAMP"/>
             <result property="updatetime" column="updateTime" jdbcType="TIMESTAMP"/>
             <result property="strategyMode" column="strategy_mode" jdbcType="INTEGER"/>
+            <result property="mqState" column="mq_state" jdbcType="TINYINT"/>
     </resultMap>
 
     <sql id="Base_Column_List">
         id,uId,activityId,
         orderId,strategyId,strategyType,
         grantType,grantDate,grantState,
-        awardId,awardType,awardName,
+        awardId,awardType,awardName,mq_state
         awardContent,uuid,createTime,
         updateTime
     </sql>
@@ -39,6 +40,14 @@
         values (#{uid},#{activityid},#{orderid},#{strategyid},#{strategytype},#{granttype},#{grantdate},
                 #{grantstate},#{awardid},#{awardtype},#{awardname},#{awardcontent},#{strategyMode},#{uuid},NOW(),NOW())
     </insert>
+    <update id="updateInvoiceMqState" parameterType="com.kevin.lottery.infrastructure.po.UserStrategyExport">
+        update user_strategy_export set mq_state = #{mqState},updatetime = NOW()
+        where orderId = #{orderid} and uid = #{uid}
+    </update>
+    <update id="updateAwardState" parameterType="com.kevin.lottery.infrastructure.po.UserStrategyExport">
+        update user_strategy_export set grantState = #{grantstate},updatetime = NOW(), grantdate = NOW()
+        where uid = #{uid} and orderid = #{orderid} and awardid = #{awardid}
+    </update>
     <select id="selectByUserId" parameterType="java.lang.String" resultMap="BaseResultMap">
         select
             <include refid="Base_Column_List"/>

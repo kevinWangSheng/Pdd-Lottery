@@ -58,7 +58,7 @@ public class DrawAlgorithmTest {
         }
         DrawAwardVO drawAwardVO = drawResp.getDrawAwardVO();
         DistributionGoods distributionGoods = distributionGoodsFactory.getDistributionGoods(drawAwardVO.getAwardType());
-        DistributionRes distributionRes = distributionGoods.doDistribution(new GoodReq(drawResp.getUid(), "111111", drawAwardVO.getAwardId(), drawAwardVO.getAwardName(), drawAwardVO.getAwardContent()));
+        DistributionRes distributionRes = distributionGoods.doDistribution(new GoodReq(drawResp.getUid(), 111111l, drawAwardVO.getAwardId(), drawAwardVO.getAwardName(), drawAwardVO.getAwardContent()));
         logger.info("分发结果：{}", JSONUtil.toJsonStr(distributionRes));
     }
 }

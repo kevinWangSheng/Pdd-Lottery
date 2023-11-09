@@ -90,6 +90,8 @@ public class Constance {
         private String info;
 
     }
+    
+
 
     @Getter
     @AllArgsConstructor
@@ -206,6 +208,46 @@ public class Constance {
         public static String USER_AGE = "userAge";
 
         public static String USER_GENDER = "userGender";
+    }
+
+    public static class KAFKA{
+        public static final String HELLO_KAFKA = "Hello-Kafka";
+
+        public static final String TOPIC_GROUP = "test-consumer-group";
+
+        public static final String LOTTY_INVOICE = "Lottery_Invoice";
+
+        public static final String LOTTERY_CONSUMER_GROUP = "Lottery_consumer_group";
+    }
+
+    public enum MQState {
+        INIT(0, "初始"),
+        COMPLETE(1, "完成"),
+        FAIL(2, "失败");
+
+        private Integer code;
+        private String info;
+
+        MQState(Integer code, String info) {
+            this.code = code;
+            this.info = info;
+        }
+
+        public Integer getCode() {
+            return code;
+        }
+
+        public void setCode(Integer code) {
+            this.code = code;
+        }
+
+        public String getInfo() {
+            return info;
+        }
+
+        public void setInfo(String info) {
+            this.info = info;
+        }
     }
 
 

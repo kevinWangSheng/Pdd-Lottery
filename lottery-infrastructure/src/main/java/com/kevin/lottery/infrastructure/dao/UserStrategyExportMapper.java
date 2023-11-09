@@ -22,7 +22,11 @@ public interface UserStrategyExportMapper extends BaseMapper<UserStrategyExport>
     @DBRouter(key = "uid")
     void insertSelective (UserStrategyExport userStrategyExport);
 
+    @DBRouter(key = "uid")
+    void updateAwardState (UserStrategyExport userStrategyExport);
 
+    @DBRouter(key = "uid")
+    void updateInvoiceMqState(UserStrategyExport userStrategyExport);
 }
 
 

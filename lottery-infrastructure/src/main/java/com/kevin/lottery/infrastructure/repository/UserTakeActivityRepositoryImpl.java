@@ -99,6 +99,15 @@ public class UserTakeActivityRepositoryImpl extends ServiceImpl<UserTakeActivity
 
         userStrategyExportMapper.insertSelective(userStrategyExport);
     }
+
+    @Override
+    public void updateInvoiceMqState(String uId, Long orderId, Integer mqState) {
+        UserStrategyExport userStrategyExport = new UserStrategyExport();
+        userStrategyExport.setUid(uId);
+        userStrategyExport.setOrderid(orderId);
+        userStrategyExport.setMqState(mqState);
+        userStrategyExportMapper.updateInvoiceMqState(userStrategyExport);
+    }
 }
 
 
