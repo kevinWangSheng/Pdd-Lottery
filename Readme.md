@@ -496,6 +496,10 @@ public interface AwardMapping  extends IMapping<DrawAwardVO, AwardDto> {
 }
 ```
 反编译生成的代码就是上面那种情况。
+
+#### 引入mq之后的执行流程
+![imgs](imgs/img_8.png)
+引入mq在进行流程解耦的同时，能够相当于异步的方式去处理一些不是很接口直接相关的操作，加快接口的响应速度。
 ## 待解决的问题
 1. mapper和对应的xml没有映射到的问题
    2. 这个你需要注意查看你使用的是mybatis还是mybatis-plus，如果你使用的是plus，应该是配置专属于plus的，而不是mybatis，否则他映射不到，具体看你使用的是plus的stater还是mybatis的stater
