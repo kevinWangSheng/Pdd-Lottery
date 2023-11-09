@@ -1,6 +1,6 @@
 package com.kevin.domain.strategy.model.resp;
 
-import com.kevin.domain.strategy.model.vo.DrawAwardInfo;
+import com.kevin.domain.strategy.model.vo.DrawAwardVO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -20,7 +20,7 @@ public class DrawResp {
 
     private Integer drawState;
 
-    private DrawAwardInfo drawAwardInfo;
+    private DrawAwardVO drawAwardVO;
 
 
     public DrawResp(String uid, Long strategyId, Integer drawState) {

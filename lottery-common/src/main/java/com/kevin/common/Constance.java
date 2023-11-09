@@ -18,6 +18,7 @@ public class Constance {
 
         PARAMERROR(506,"参数错误"),
         UNLL_ERROR(507,"空指针错误"),
+        RULE_ERR(508, "量化人群规则执行失败"),
         NO_UPDATE(502,"SQL操作无更新");
         private int code;
         private String desc;

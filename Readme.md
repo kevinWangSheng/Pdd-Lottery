@@ -297,6 +297,205 @@ CREATE TABLE `rule_tree_node` (
 对应的结构树如下
 ![img.png](imgs/img_6.png)
 获取到最后的节点的活动id就可以进行对应的抽奖操作了。
+
+#### 对象转化
+对象转化性能情况
+![img.png](imgs/img_7.png)
+对于使用Spring的beanUtils.copyProtyties()方法效率也不算太低，但是也不高
+但是如果单纯使用get和set的方式，容易出错，所以这里使用了一个mapstruct
+需要导入的依赖：
+```xml
+<!-- https://mvnrepository.com/artifact/org.mapstruct/mapstruct -->
+        <dependency>
+            <groupId>org.mapstruct</groupId>
+            <artifactId>mapstruct</artifactId>
+            <version>1.5.3.Final</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.mapstruct/mapstruct-processor -->
+        <dependency>
+            <groupId>org.mapstruct</groupId>
+            <artifactId>mapstruct-processor</artifactId>
+            <version>1.5.3.Final</version>
+        </dependency>
+```
+具体的配置类：
+```java
+@MapperConfig
+public interface IMapping<SOURCE,TARGET> {
+    /**
+     * 映射同属性名称，正向
+     * @param var1
+     * @return
+     */
+    @Mapping(target = "createTime",dateFormat = "yyyy-MM-dd HH:mm:ss")
+    TARGET sourceToTarget(SOURCE var1);
+
+    /**
+     * 映射同属性名称，反向
+     * @param var1
+     * @return
+     */
+    @InheritInverseConfiguration(name = "sourceToTarget")
+    SOURCE targetToSource(TARGET var1);
+
+    /**
+     * 映射同属性集合，正向
+     * @param var1
+     * @return
+     */
+    @InheritConfiguration(name = "sourceToTarget")
+    List<TARGET> sourceToTarget(List<SOURCE> var1);
+
+    /**
+     * 映射同属性集合，反向
+     * @param var1
+     * @return
+     */
+    @InheritConfiguration(name = "targetToSource")
+    List<SOURCE> targetToSource(List<TARGET> var1);
+
+    /**
+     * 映射流，正向
+     * @param stream
+     * @return
+     */
+    List<TARGET> sourceToTarget(Stream<SOURCE> stream);
+
+    /**
+     * 映射流，反向
+     * @param stream
+     * @return
+     */
+    List<SOURCE> targetToSource(Stream<TARGET> stream);
+}
+
+```
+这个是在编译的时候就进行性生成的代码，而不是在运行的时候通过字节码进行解析，然后反射生成，反射设置值，所以效率方面较高
+下面这个是他反射以后经过反编译的代码
+```java
+package com.kevin.lottery.assembler;
+
+import com.kevin.domain.strategy.model.vo.DrawAwardVO;
+import com.kevin.lottery.rpc.dto.AwardDto;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+import javax.annotation.Generated;
+import org.springframework.stereotype.Component;
+
+@Generated(
+    value = "org.mapstruct.ap.MappingProcessor",
+    date = "2023-11-09T15:15:46+0800",
+    comments = "version: 1.5.3.Final, compiler: javac, environment: Java 1.8.0_333 (Oracle Corporation)"
+)
+@Component
+public class AwardMappingImpl implements AwardMapping {
+
+    @Override
+    public List<AwardDto> sourceToTarget(List<DrawAwardVO> var1) {
+        if ( var1 == null ) {
+            return null;
+        }
+
+        List<AwardDto> list = new ArrayList<AwardDto>( var1.size() );
+        for ( DrawAwardVO drawAwardVO : var1 ) {
+            list.add( sourceToTarget( drawAwardVO ) );
+        }
+
+        return list;
+    }
+
+    @Override
+    public List<DrawAwardVO> targetToSource(List<AwardDto> var1) {
+        if ( var1 == null ) {
+            return null;
+        }
+
+        List<DrawAwardVO> list = new ArrayList<DrawAwardVO>( var1.size() );
+        for ( AwardDto awardDto : var1 ) {
+            list.add( targetToSource( awardDto ) );
+        }
+
+        return list;
+    }
+
+    @Override
+    public List<AwardDto> sourceToTarget(Stream<DrawAwardVO> stream) {
+        if ( stream == null ) {
+            return null;
+        }
+
+        return stream.map( drawAwardVO -> sourceToTarget( drawAwardVO ) )
+        .collect( Collectors.toCollection( ArrayList<AwardDto>::new ) );
+    }
+
+    @Override
+    public List<DrawAwardVO> targetToSource(Stream<AwardDto> stream) {
+        if ( stream == null ) {
+            return null;
+        }
+
+        return stream.map( awardDto -> targetToSource( awardDto ) )
+        .collect( Collectors.toCollection( ArrayList<DrawAwardVO>::new ) );
+    }
+
+    @Override
+    public AwardDto sourceToTarget(DrawAwardVO var1) {
+        if ( var1 == null ) {
+            return null;
+        }
+
+        AwardDto awardDto = new AwardDto();
+
+        awardDto.setUserId( var1.getuId() );
+        awardDto.setAwardId( var1.getAwardId() );
+        awardDto.setAwardType( var1.getAwardType() );
+        awardDto.setAwardName( var1.getAwardName() );
+        awardDto.setAwardContent( var1.getAwardContent() );
+        awardDto.setStrategyMode( var1.getStrategyMode() );
+        awardDto.setGrantType( var1.getGrantType() );
+        awardDto.setGrantDate( var1.getGrantDate() );
+
+        return awardDto;
+    }
+
+    @Override
+    public DrawAwardVO targetToSource(AwardDto var1) {
+        if ( var1 == null ) {
+            return null;
+        }
+
+        DrawAwardVO drawAwardVO = new DrawAwardVO();
+
+        drawAwardVO.setAwardId( var1.getAwardId() );
+        drawAwardVO.setAwardName( var1.getAwardName() );
+        drawAwardVO.setAwardContent( var1.getAwardContent() );
+        drawAwardVO.setAwardType( var1.getAwardType() );
+        drawAwardVO.setStrategyMode( var1.getStrategyMode() );
+        drawAwardVO.setGrantType( var1.getGrantType() );
+        drawAwardVO.setGrantDate( var1.getGrantDate() );
+
+        return drawAwardVO;
+    }
+}
+
+```
+实现类配置
+```java
+@Mapper(componentModel = "spring",unmappedSourcePolicy = ReportingPolicy.IGNORE,unmappedTargetPolicy = ReportingPolicy.IGNORE)
+public interface AwardMapping  extends IMapping<DrawAwardVO, AwardDto> {
+
+    @Mapping(source = "uId",target = "userId")
+    @Override
+    AwardDto sourceToTarget(DrawAwardVO var1);
+
+    @Override
+    DrawAwardVO targetToSource(AwardDto var1);
+}
+```
+反编译生成的代码就是上面那种情况。
 ## 待解决的问题
 1. mapper和对应的xml没有映射到的问题
    2. 这个你需要注意查看你使用的是mybatis还是mybatis-plus，如果你使用的是plus，应该是配置专属于plus的，而不是mybatis，否则他映射不到，具体看你使用的是plus的stater还是mybatis的stater

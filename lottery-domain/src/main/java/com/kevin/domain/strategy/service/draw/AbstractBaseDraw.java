@@ -2,7 +2,6 @@ package com.kevin.domain.strategy.service.draw;
 
 import com.kevin.common.Constance;
 import com.kevin.domain.strategy.model.aggregates.StrategyRich;
-import com.kevin.domain.strategy.model.enums.DrawRateRandomDrawAlgorithmEnum;
 import com.kevin.domain.strategy.model.req.DrawReq;
 import com.kevin.domain.strategy.model.resp.DrawResp;
 import com.kevin.domain.strategy.model.vo.*;
@@ -70,8 +69,8 @@ public abstract class AbstractBaseDraw extends DrawStrategySupport implements ID
         }
         AwardBriefVo award = super.queryAward(awardId);
         logger.info("执行策略抽奖完成【已中奖】，用户：{} 策略ID：{} 奖品ID：{} 奖品名称：{}", userId, strategyId, awardId, award.getAwardName());
-        DrawAwardInfo drawAwardInfo = new DrawAwardInfo(awardId,award.getAwardName(),award.getAwardDesc(),award.getAwardType(),strategyBriefVo.getStrategyMode(),strategyBriefVo.getGrantType(),strategyBriefVo.getGrantDate());
-        return new DrawResp(userId, strategyId, Constance.DrawState.SUCCESS.getCode(), drawAwardInfo);
+        DrawAwardVO drawAwardVO = new DrawAwardVO(awardId,award.getAwardName(),award.getAwardDesc(),award.getAwardType(),strategyBriefVo.getStrategyMode(),strategyBriefVo.getGrantType(),strategyBriefVo.getGrantDate());
+        return new DrawResp(userId, strategyId, Constance.DrawState.SUCCESS.getCode(), drawAwardVO);
     }
 
     protected abstract String drawAlgorithm(Long strategyId, IDrawAlgorithm drawAlgorithm, List<String> exculdStrategyDetails);

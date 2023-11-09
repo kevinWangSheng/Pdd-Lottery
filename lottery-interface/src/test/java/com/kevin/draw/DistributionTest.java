@@ -8,7 +8,7 @@ import com.kevin.domain.award.service.goods.DistributionGoods;
 import com.kevin.domain.award.service.goods.factory.DistributionGoodsFactory;
 import com.kevin.domain.strategy.model.req.DrawReq;
 import com.kevin.domain.strategy.model.resp.DrawResp;
-import com.kevin.domain.strategy.model.vo.DrawAwardInfo;
+import com.kevin.domain.strategy.model.vo.DrawAwardVO;
 import com.kevin.domain.strategy.service.draw.IDrawExec;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -43,9 +43,9 @@ public class DistributionTest {
             logger.info("抽奖失败");
             return;
         }
-        DrawAwardInfo drawAwardInfo = drawResp.getDrawAwardInfo();
-        DistributionGoods distributionGoods = distributionGoodsFactory.getDistributionGoods(drawAwardInfo.getAwardType());
-        DistributionRes distributionRes = distributionGoods.doDistribution(new GoodReq(drawResp.getUid(), "111111", drawAwardInfo.getAwardId(), drawAwardInfo.getAwardName(), drawAwardInfo.getAwardContent()));
+        DrawAwardVO drawAwardVO = drawResp.getDrawAwardVO();
+        DistributionGoods distributionGoods = distributionGoodsFactory.getDistributionGoods(drawAwardVO.getAwardType());
+        DistributionRes distributionRes = distributionGoods.doDistribution(new GoodReq(drawResp.getUid(), "111111", drawAwardVO.getAwardId(), drawAwardVO.getAwardName(), drawAwardVO.getAwardContent()));
         logger.info("分发结果：{}", JSONUtil.toJsonStr(distributionRes));
     }
 }
