@@ -88,12 +88,14 @@ public class ActivityProcessImpl implements IActivityProcess {
             // 4.1 MQ 消息发送完成，更新数据库表 user_strategy_export.mq_state = 1
             @Override
             public void onFailure(Throwable ex) {
-                activityPartake.updateInvoiceMqState(req.getUId(),invoiceVO.getOrderId(),Constance.MQState.COMPLETE.getCode());
+                activityPartake.updateInvoiceMqState(req.getUId(),invoiceVO.getOrderId(),Constance.MQState.FAIL.getCode());
+                logger.error("消息发送失败了：uid:{},orderId:{}",req.getUId(),invoiceVO.getOrderId());
             }
             // 4.2 MQ 消息发送失败，更新数据库表 user_strategy_export.mq_state = 2 【等待定时任务扫码补偿MQ消息】
             @Override
             public void onSuccess(SendResult<String, Object> result) {
-                activityPartake.updateInvoiceMqState(req.getUId(),invoiceVO.getOrderId(),Constance.MQState.FAIL.getCode());
+                activityPartake.updateInvoiceMqState(req.getUId(),invoiceVO.getOrderId(),Constance.MQState.COMPLETE.getCode());
+                logger.info("消息发送成功了：uid:{},orderId:{}",req.getUId(),invoiceVO.getOrderId());
             }
         });
         //返回结果

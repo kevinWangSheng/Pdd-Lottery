@@ -13,4 +13,5 @@ public interface AwardRepository  {
 
     void updateUserAwardState(String uId, Long orderId, String awardId, Integer grantState);
 
+    Integer getMqState(String userId, String awardId, Long orderId);
 }

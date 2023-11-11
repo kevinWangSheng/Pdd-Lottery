@@ -497,6 +497,8 @@ public interface AwardMapping  extends IMapping<DrawAwardVO, AwardDto> {
 ```
 反编译生成的代码就是上面那种情况。
 
+
+
 #### 引入mq之后的执行流程
 ![imgs](imgs/img_8.png)
 引入mq在进行流程解耦的同时，能够相当于异步的方式去处理一些不是很接口直接相关的操作，加快接口的响应速度。
@@ -508,6 +510,7 @@ public interface AwardMapping  extends IMapping<DrawAwardVO, AwardDto> {
 ## 记录的错误
 1. kafka在配置的时候使用：listeners=PLAINTEXT://10.127.96.151:9092
 这后面的端口号尽量写真实的端口号，而不是使用127.0.0.1或者localhost
+2. xxl-job使用的时候出现的问题，他是通过发送对应的执行信息给执行器，这个执行器是必须有地址的，所以他们两个必须是可以连通的，比如两个都是公网ip，否则的话你在本地执行的话，你在服务器上部署的xxl-job是访问不到本地的，也就不能给本地的对应任务进行执行操作了。这个时候你可以使用内网穿透技术，让公网的ip和你对应的本地进行联通，这样就可以调用对应的服务了。
 
 
 ### 使用过程中出现的错误

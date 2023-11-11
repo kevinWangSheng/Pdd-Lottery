@@ -1,12 +1,10 @@
 package com.kevin.domain.activity.service.deploy.impl;
 
+import cn.bugstack.middleware.db.router.strategy.IDBRouterStrategy;
 import cn.hutool.json.JSONUtil;
 import com.kevin.domain.activity.model.aggregates.ActivityConfigRich;
 import com.kevin.domain.activity.model.req.ActivityConfigReq;
-import com.kevin.domain.activity.model.vo.AcitivityVo;
-import com.kevin.domain.activity.model.vo.AwardVo;
-import com.kevin.domain.activity.model.vo.StrategyDetailVo;
-import com.kevin.domain.activity.model.vo.StrategyVo;
+import com.kevin.domain.activity.model.vo.*;
 import com.kevin.domain.activity.reporisitory.IActivityRepository;
 import com.kevin.domain.activity.service.deploy.IActivityDeploy;
 import org.slf4j.Logger;
@@ -28,6 +26,9 @@ public class ActivityDeployImpl implements IActivityDeploy {
 
     @Resource
     private IActivityRepository activityRepository;
+
+    @Resource
+    private IDBRouterStrategy dbRouter;
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void addActivity(ActivityConfigReq req) {
@@ -62,5 +63,24 @@ public class ActivityDeployImpl implements IActivityDeploy {
     @Override
     public void updateActivity(ActivityConfigReq req) {
         // TODO 非核心功能后续补充
+    }
+
+    @Override
+    public List<AcitivityVo> scanToDoActivityList(Long id) {
+
+        return activityRepository.scanToDoActivityList(id);
+    }
+
+    @Override
+    public List<InvoiceVO> scanInvoiceMqState(int dbIndex, int tbIndex) {
+        try {
+            dbRouter.setDBKey(dbIndex);
+            dbRouter.setTBKey(tbIndex);
+
+            //查询数据
+            return activityRepository.scanInvoiceMqState();
+        } finally {
+            dbRouter.clear();
+        }
     }
 }

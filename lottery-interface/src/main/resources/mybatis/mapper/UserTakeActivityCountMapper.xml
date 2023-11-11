@@ -37,4 +37,5 @@
         from user_take_activity_count
         where uId = #{uid} and activityId = #{activityid}
     </select>
+
 </mapper>

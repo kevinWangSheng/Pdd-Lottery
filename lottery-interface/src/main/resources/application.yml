@@ -2,6 +2,8 @@ server:
   port: 8088
   servlet:
     context-path: /interfaces
+
+# mysql
 mini-db-router:
   jdbc:
     datasource:
@@ -26,6 +28,7 @@ mini-db-router:
         username: root
         password: 13379895997.hui
 
+# dubbo
 #spring:
 #  datasource:
 #    driver-class-name: com.mysql.cj.jdbc.Driver
@@ -47,8 +50,7 @@ mybatis-plus:
   config-location: classpath:/mybatis/config/mybatis-config.xml
   mapper-locations: classpath:/mybatis/mapper/*.xml
 
-
-
+# kafka
 spring:
   kafka:
     bootstrap-servers: 124.221.25.145:9092
@@ -87,3 +89,18 @@ spring:
       #listner负责ack，每调用一次，就立即commit
       ack-mode: manual_immediate
       missing-topics-fatal: false
+
+# xxl-job
+xxl:
+  job:
+    admin:
+      addresses: http://124.221.25.145:7397/xxl-job-admin
+      username: admin
+      password: 123456
+    executor:
+      appname: lottery-job
+      port: 9998
+      logpath: D:\dev\project\xiaofuge\Lottery\code\LotteryMarketing\Lottery\docs\logs
+      logretentiondays: 50
+      ip: 124.221.25.145
+    accessToken: default_token

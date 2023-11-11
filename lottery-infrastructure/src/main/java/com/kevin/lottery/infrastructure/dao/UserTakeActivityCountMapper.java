@@ -6,6 +6,8 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.kevin.lottery.infrastructure.po.UserTakeActivityCount;
 import org.apache.ibatis.annotations.Mapper;
 
+import java.util.List;
+
 /**
 * @author wang sheng hui
 * @description 针对表【user_take_activity_count(用户活动参与次数表)】的数据库操作Mapper
@@ -21,6 +23,8 @@ public interface UserTakeActivityCountMapper extends BaseMapper<UserTakeActivity
     void insertOne(UserTakeActivityCount userTakeActivityCount);
 
     int updateLeftCount(UserTakeActivityCount userTakeActivityCount);
+
+    List<UserTakeActivityCount> scanInvoiceMqState();
 }
 
 

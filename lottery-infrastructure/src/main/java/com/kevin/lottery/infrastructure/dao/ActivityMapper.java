@@ -6,6 +6,8 @@ import com.kevin.domain.activity.model.vo.AlterStateVo;
 import com.kevin.lottery.infrastructure.po.Activity;
 import org.apache.ibatis.annotations.Mapper;
 
+import java.util.List;
+
 /**
 * @author wang sheng hui
 * @description 针对表【activity(活动配置)】的数据库操作Mapper
@@ -21,6 +23,8 @@ public interface ActivityMapper extends BaseMapper<Activity> {
     Activity queryById(Long activityId);
 
     int subtractionActivityStock(Long activityId);
+
+    List<Activity> scanToDoActivityList(Long id);
 }
 
 

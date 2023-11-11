@@ -85,7 +85,8 @@ public class Constance {
         /**
          * 发奖失败
          */
-        FAILURE(2, "发奖失败");
+        FAILURE(2, "发奖失败"),
+        DUPLICATE(3,"发过奖了");
         private Integer code;
         private String info;
 
@@ -223,7 +224,9 @@ public class Constance {
     public enum MQState {
         INIT(0, "初始"),
         COMPLETE(1, "完成"),
-        FAIL(2, "失败");
+        FAIL(2, "失败"),
+        // （已经完成，不需要再次完成）
+        ALREADY_COMPLETE(3,"已经完成");
 
         private Integer code;
         private String info;

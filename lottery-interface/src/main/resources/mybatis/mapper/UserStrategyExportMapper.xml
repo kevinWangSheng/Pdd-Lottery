@@ -54,4 +54,13 @@
         FROM user_strategy_export
         WHERE uId = #{uId}
     </select>
+    <select id="getMqState" resultType="java.lang.Integer" parameterType="com.kevin.lottery.infrastructure.po.UserStrategyExport">
+        select mq_state from user_strategy_export
+        where uid = #{uid} and orderid = #{orderid} and awardid = #{awardid}
+    </select>
+    <select id="scanInvoiceMqState" resultMap="BaseResultMap" parameterType="java.util.Date">
+        SELECT uid, orderid, awardid, awardType, awardName, awardContent
+        from user_strategy_export
+        where mq_state = 2 OR ( mq_state = 0 AND createTime &lt;=  #{date} )
+    </select>
 </mapper>

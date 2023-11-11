@@ -5,6 +5,10 @@ import cn.bugstack.middleware.db.router.annotation.DBRouterStrategy;
 import com.kevin.lottery.infrastructure.po.UserStrategyExport;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.Date;
+import java.util.List;
 
 /**
 * @author wang sheng hui
@@ -27,6 +31,11 @@ public interface UserStrategyExportMapper extends BaseMapper<UserStrategyExport>
 
     @DBRouter(key = "uid")
     void updateInvoiceMqState(UserStrategyExport userStrategyExport);
+
+    @DBRouter(key = "uid")
+    Integer getMqState(UserStrategyExport userStrategyExport);
+
+    List<UserStrategyExport> scanInvoiceMqState(@Param("date") Date date);
 }
 
 

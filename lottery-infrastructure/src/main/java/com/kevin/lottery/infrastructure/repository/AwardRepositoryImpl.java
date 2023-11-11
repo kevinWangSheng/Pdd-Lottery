@@ -28,6 +28,15 @@ public class AwardRepositoryImpl implements AwardRepository {
 
         userStrategyExportMapper.updateAwardState(userStrategyExport);
     }
+
+    @Override
+    public Integer getMqState(String userId, String awardId, Long orderId) {
+        UserStrategyExport userStrategyExport = new UserStrategyExport();
+        userStrategyExport.setUid(userId);
+        userStrategyExport.setAwardid(awardId);
+        userStrategyExport.setOrderid(orderId);
+        return userStrategyExportMapper.getMqState(userStrategyExport);
+    }
 }
 
 

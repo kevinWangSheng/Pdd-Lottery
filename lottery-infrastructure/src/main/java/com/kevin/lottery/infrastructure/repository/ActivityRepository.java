@@ -9,6 +9,8 @@ import com.kevin.lottery.infrastructure.po.*;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -33,6 +35,9 @@ public class ActivityRepository implements IActivityRepository{
 
     @Resource
     private UserTakeActivityCountMapper userTakeActivityCountMapper;
+
+    @Resource
+    private UserStrategyExportMapper userStrategyExportMapper;
     @Override
     public void addAcitivity(AcitivityVo acitivityVo) {
         if(acitivityVo == null){
@@ -110,5 +115,48 @@ public class ActivityRepository implements IActivityRepository{
     @Override
     public int subtractionActivityStock(Long activityId) {
         return activityMapper.subtractionActivityStock(activityId);
+    }
+
+    @Override
+    public List<AcitivityVo> scanToDoActivityList(Long id) {
+
+        List<Activity> activities = activityMapper.scanToDoActivityList(id);
+        if(activities == null || activities.isEmpty()){
+            return new ArrayList<>();
+        }
+        List<AcitivityVo> acitivityVoList = new ArrayList<>();
+        for(Activity activity :activities) {
+            AcitivityVo acitivityVo = new AcitivityVo();
+            acitivityVo.setAcitivityId(activity.getActivityId());
+            acitivityVo.setActivityName(activity.getActivityName());
+            acitivityVo.setBeginTime(activity.getBeginDateTime());
+            acitivityVo.setEndTime(activity.getEndDateTime());
+            acitivityVo.setState(activity.getState());
+            acitivityVo.setCreator(activity.getCreator());
+
+            acitivityVoList.add(acitivityVo);
+        }
+        return acitivityVoList;
+    }
+
+    @Override
+    public List<InvoiceVO> scanInvoiceMqState() {
+        List<UserStrategyExport> userStrategyExports = userStrategyExportMapper.scanInvoiceMqState(new Date(System.currentTimeMillis() - 30 * 60 * 1000));
+
+        List<InvoiceVO> invoiceVOList = new ArrayList<>();
+
+        for(UserStrategyExport userStrategyExport : userStrategyExports){
+            InvoiceVO invoiceVO = new InvoiceVO();
+
+            invoiceVO.setuId(userStrategyExport.getUid());
+            invoiceVO.setOrderId(userStrategyExport.getOrderid());
+            invoiceVO.setAwardName(userStrategyExport.getAwardname());
+            invoiceVO.setAwardId(userStrategyExport.getAwardid());
+            invoiceVO.setAwardType(userStrategyExport.getAwardtype());
+            invoiceVO.setAwardContent(userStrategyExport.getAwardcontent());
+
+            invoiceVOList.add(invoiceVO);
+        }
+        return invoiceVOList;
     }
 }

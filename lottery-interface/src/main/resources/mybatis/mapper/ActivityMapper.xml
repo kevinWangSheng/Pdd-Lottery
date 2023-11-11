@@ -42,4 +42,11 @@
         from activity
         where activity_id = #{activityId}
     </select>
+    <select id="scanToDoActivityList" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select activity_id, activity_name, begin_date_time, end_date_time, state, creator
+        FROM activity
+        where id >#{id} and state in (4,5)
+        order by id asc
+        limit 10
+    </select>
 </mapper>

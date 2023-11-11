@@ -45,6 +45,13 @@ public class LotteryInvoiceListener {
                 // 从工厂中获取对应 配送类
                 DistributionGoods distributionGoods = distributionGoodsFactory.getDistributionGoods(invoiceVO.getAwardType());
                 DistributionRes distributionRes = distributionGoods.doDistribution(new GoodReq(invoiceVO.getuId(), invoiceVO.getOrderId(), invoiceVO.getAwardId(), invoiceVO.getAwardName(), invoiceVO.getAwardContent()));
+                //检查消息是否重复发送
+                if(Constance.AwardState.DUPLICATE.getCode().equals(distributionRes.getCode())){
+                    logger.info("消息重复发送了：topic{},message:{},uid:{}",topic,message.get(),invoiceVO.getuId());
+                    //对消息进行确认
+                    ack.acknowledge();
+                    return;
+                }
                 // 检验配送结果
                 Assert.isTrue(Constance.AwardState.SUCCESS.getCode() == distributionRes.getCode(),distributionRes.getInfo());
                 //打印日志
