@@ -3,7 +3,9 @@ package com.kevin.domain.activity.service.partake;
 import com.kevin.common.Result;
 import com.kevin.domain.activity.model.req.PartakeReq;
 import com.kevin.domain.activity.model.resp.PartakeResult;
+import com.kevin.domain.activity.model.vo.ActivityPartakeRecordVO;
 import com.kevin.domain.activity.model.vo.DrawOrderVO;
+import com.kevin.domain.activity.model.vo.UserTakeActivityVO;
 
 /**抽奖活动参与接口
  * @author wang
@@ -21,4 +23,12 @@ public interface IActivityPartake {
      * @param mqState   MQ 发送状态
      */
     void updateInvoiceMqState(String uId, Long orderId, Integer mqState);
+
+    UserTakeActivityVO queryNoConsumedTakeActivityOrder(Long activityId, String uid);
+
+    void recoverActivityCacheStockByRedis(Long activityId, String stockKey, Integer code);
+
+    void recoverActivityCacheStockByRedisAndDecrCount(Long activityId, String stockKey, Integer code);
+
+    void updateActivityStock(ActivityPartakeRecordVO recordVO);
 }

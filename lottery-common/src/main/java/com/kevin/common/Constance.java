@@ -9,8 +9,24 @@ import lombok.Getter;
  */
 public class Constance {
 
+    public static class RedisKey{
+        public static final String SET_LOCK = "SetLock";
+        private static final String LOTTERY_ACTIVITY_STOCK_COUNT = "lottery_activity_stock_count_";
+
+        public static String KEY_LOTTERY_ACTIVITY_STOCK_COUNT(Long activityId){
+            return LOTTERY_ACTIVITY_STOCK_COUNT+activityId;
+        }
+
+        private static final String LOTTERY_ACTIVITY_STOCK_COUNT_TOKEN = "lottery_activity_stock_count_token_";
+
+        public static String KEY_LOTTERY_ACTIVITY_STOCK_COUNT_TOKEN(Long activityId,Integer stockCount){
+            return LOTTERY_ACTIVITY_STOCK_COUNT_TOKEN+activityId+"_"+stockCount;
+        }
+    }
+
     public enum ResponseCode{
         SUCCESSFUL(0,"成功"),
+        NOT_CONSUMED_TAKE(201, "未消费活动领取记录"),
         UN_ERROR(500,"未知失败"),
         ILEEGLE_ERROR(501,"非法参数错误"),
         INDEX_DUP(100,"主键冲突"),
@@ -19,6 +35,10 @@ public class Constance {
         PARAMERROR(506,"参数错误"),
         UNLL_ERROR(507,"空指针错误"),
         RULE_ERR(508, "量化人群规则执行失败"),
+        OUT_OF_STOCK(509, "活动无库存"),
+
+        ERR_TOKEN(510, "分布式锁失败"),
+
         NO_UPDATE(502,"SQL操作无更新");
         private int code;
         private String desc;
@@ -217,6 +237,8 @@ public class Constance {
         public static final String TOPIC_GROUP = "test-consumer-group";
 
         public static final String LOTTY_INVOICE = "Lottery_Invoice";
+
+        public static final String TOPIC_ACTIVITY_PARTAKE = "lottery_activity_partake";
 
         public static final String LOTTERY_CONSUMER_GROUP = "Lottery_consumer_group";
     }

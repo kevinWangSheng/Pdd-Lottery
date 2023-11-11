@@ -2,6 +2,7 @@ package com.kevin.lottery.application.mq.producer;
 
 import cn.hutool.json.JSONUtil;
 import com.kevin.common.Constance;
+import com.kevin.domain.activity.model.vo.ActivityPartakeRecordVO;
 import com.kevin.domain.activity.model.vo.InvoiceVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,9 +25,15 @@ public class KafkaProducer {
     @Resource
     private KafkaTemplate<String,Object> kafkaTemplate;
 
-    public ListenableFuture<SendResult<String, Object>> send(InvoiceVO invoiceVO){
+    public ListenableFuture<SendResult<String, Object>> sendLotteryInvoice(InvoiceVO invoiceVO){
         String objJson = JSONUtil.toJsonStr(invoiceVO);
         logger.info("开始发送消息：{}",objJson);
         return kafkaTemplate.send(Constance.KAFKA.LOTTY_INVOICE, objJson);
+    }
+
+    public ListenableFuture<SendResult<String, Object>> sendLotteryActivityPartakeRecord(ActivityPartakeRecordVO partakeRecordVO){
+        String jsonStr = JSONUtil.toJsonStr(partakeRecordVO);
+        logger.info("发送MQ消息(领取活动记录) topic:{},bizId:{}, message:{}",Constance.KAFKA.TOPIC_ACTIVITY_PARTAKE,partakeRecordVO.getuId(),jsonStr);
+        return kafkaTemplate.send(Constance.KAFKA.TOPIC_ACTIVITY_PARTAKE, jsonStr);
     }
 }

@@ -43,7 +43,7 @@ public class AddMqSendTest {
         invoice.setAwardContent("苹果电脑");
         invoice.setShippingAddress(null);
         invoice.setExtInfo(null);
-        kafkaProducer.send(invoice);
+        kafkaProducer.sendLotteryInvoice(invoice);
 
         while (true){
             Thread.sleep(10000);

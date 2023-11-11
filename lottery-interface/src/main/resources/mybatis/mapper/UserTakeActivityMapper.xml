@@ -16,6 +16,7 @@
             <result property="createtime" column="createTime" jdbcType="TIMESTAMP"/>
             <result property="updatetime" column="updateTime" jdbcType="TIMESTAMP"/>
             <result property="state" column="state" jdbcType="TINYINT"/>
+            <result property="strategyId" column="strategy_id" jdbcType="INTEGER"/>
 
     </resultMap>
 
@@ -37,5 +38,12 @@
         select id,uId,takeId,activityId,activityName,takeDate,takeCount,uuid,createTime,updateTime
         from user_take_activity
         where uid = #{uid}
+    </select>
+    <select id="queryNoConsumedTakeActivity" resultMap="BaseResultMap" parameterType="com.kevin.lottery.infrastructure.po.UserTakeActivity">
+        select activityId,takeId,strategy_id,state
+        from user_take_activity
+        where uid = #{uid} and activityId = #{activityid} and state = 0
+        order by id desc
+        limit 1
     </select>
 </mapper>

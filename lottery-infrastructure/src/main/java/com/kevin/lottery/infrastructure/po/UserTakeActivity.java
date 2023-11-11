@@ -72,6 +72,8 @@ public class UserTakeActivity implements Serializable {
 
     private Integer state;
 
+    private Long strategyId;
+
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
 

@@ -1,11 +1,15 @@
 package com.kevin.lottery.infrastructure.repository;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.kevin.domain.activity.model.vo.ActivityPartakeRecordVO;
 import com.kevin.domain.activity.model.vo.DrawOrderVO;
+import com.kevin.domain.activity.model.vo.UserTakeActivityVO;
 import com.kevin.domain.activity.reporisitory.UserTakeActivityRepository;
+import com.kevin.lottery.infrastructure.dao.ActivityMapper;
 import com.kevin.lottery.infrastructure.dao.UserStrategyExportMapper;
 import com.kevin.lottery.infrastructure.dao.UserTakeActivityCountMapper;
 import com.kevin.lottery.infrastructure.dao.UserTakeActivityMapper;
+import com.kevin.lottery.infrastructure.po.Activity;
 import com.kevin.lottery.infrastructure.po.UserStrategyExport;
 import com.kevin.lottery.infrastructure.po.UserTakeActivity;
 import com.kevin.lottery.infrastructure.po.UserTakeActivityCount;
@@ -31,6 +35,9 @@ public class UserTakeActivityRepositoryImpl extends ServiceImpl<UserTakeActivity
 
     @Resource
     private UserStrategyExportMapper userStrategyExportMapper;
+
+    @Resource
+    private ActivityMapper activityMapper;
 
     @Override
     public int subtractionLeftCount(Long activityId, String activityName, Integer takeCount, Integer userTakeLeftCount, String uId, Date partakeDate) {
@@ -107,6 +114,36 @@ public class UserTakeActivityRepositoryImpl extends ServiceImpl<UserTakeActivity
         userStrategyExport.setOrderid(orderId);
         userStrategyExport.setMqState(mqState);
         userStrategyExportMapper.updateInvoiceMqState(userStrategyExport);
+    }
+
+    @Override
+    public UserTakeActivityVO queryNoConsumedTakeActivityOrder(Long activityId, String uid) {
+
+        UserTakeActivity userTakeActivity = new UserTakeActivity();
+        userTakeActivity.setActivityid(activityId);
+        userTakeActivity.setUid(uid);
+        UserTakeActivity noConsumedTakeActivity = userTakeActivityMapper.queryNoConsumedTakeActivity(userTakeActivity);
+
+        if(null == noConsumedTakeActivity){
+            return null;
+        }
+
+        UserTakeActivityVO userTakeActivityVO = new UserTakeActivityVO();
+        userTakeActivityVO.setActivityId(noConsumedTakeActivity.getActivityid());
+        userTakeActivityVO.setState(noConsumedTakeActivity.getState());
+        userTakeActivityVO.setStrategyId(noConsumedTakeActivity.getStrategyId());
+        userTakeActivityVO.setTakeId(noConsumedTakeActivity.getTakeid());
+
+        return userTakeActivityVO;
+    }
+
+    @Override
+    public void updateActivityStock(ActivityPartakeRecordVO recordVO) {
+        Activity activity = new Activity();
+        activity.setActivityId(recordVO.getActivityId());
+        activity.setStocksurpluscount(recordVO.getStockSurplusCount());
+        activityMapper.updateActivityStock(activity);
+
     }
 }
 

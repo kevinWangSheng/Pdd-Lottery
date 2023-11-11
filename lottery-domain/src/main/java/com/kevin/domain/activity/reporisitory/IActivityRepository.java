@@ -3,6 +3,7 @@ package com.kevin.domain.activity.reporisitory;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.kevin.common.Constance;
 import com.kevin.domain.activity.model.req.PartakeReq;
+import com.kevin.domain.activity.model.resp.StockResult;
 import com.kevin.domain.activity.model.vo.*;
 
 
@@ -48,4 +49,10 @@ public interface IActivityRepository {
     List<AcitivityVo> scanToDoActivityList(Long id);
 
     List<InvoiceVO> scanInvoiceMqState();
+
+    StockResult subtractionActivityStockByRedis(String uId, Long activityId, Integer stockCount);
+
+    void recoverActivityCacheStockByRedis(Long activityId, String stockKey, Integer code);
+
+    void recoverActivityCacheStockByRedisAndDecrCount(Long activityId, String stockKey, Integer code);
 }

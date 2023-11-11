@@ -10,7 +10,6 @@ import com.kevin.domain.activity.service.deploy.IActivityDeploy;
 import com.kevin.domain.activity.service.partake.IActivityPartake;
 import com.kevin.domain.activity.service.stateflow.IStateHandler;
 import com.kevin.lottery.application.mq.producer.KafkaProducer;
-import com.kevin.lottery.application.process.IActivityProcess;
 import com.xxl.job.core.context.XxlJobHelper;
 import com.xxl.job.core.handler.annotation.XxlJob;
 import org.apache.commons.lang3.StringUtils;
@@ -113,7 +112,7 @@ public class LotteryXxlJob {
                 }
                 for(InvoiceVO invoiceVO:invoiceVOList){
                     // 对失败的mq进行发送补偿，并进行更新状态
-                    ListenableFuture<SendResult<String, Object>> future = kafkaProducer.send(invoiceVO);
+                    ListenableFuture<SendResult<String, Object>> future = kafkaProducer.sendLotteryInvoice(invoiceVO);
                     future.addCallback(new ListenableFutureCallback<SendResult<String, Object>>() {
                         @Override
                         public void onFailure(Throwable ex) {

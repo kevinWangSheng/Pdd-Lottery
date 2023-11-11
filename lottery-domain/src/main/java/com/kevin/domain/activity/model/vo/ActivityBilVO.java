@@ -45,10 +45,10 @@ public class ActivityBilVO {
      * 活动状态：1编辑、2提审、3撤审、4通过、5运行(审核通过后worker扫描状态)、6拒绝、7关闭、8开启 Constants.ActivityState
      */
     private Integer state;
-    /**
-     * 活动策略id
-     */
+
     private Long strategyId;
+    /** 库存 */
+    private Integer stockCount;
     /**
      * 每个人可以参与次数
      */

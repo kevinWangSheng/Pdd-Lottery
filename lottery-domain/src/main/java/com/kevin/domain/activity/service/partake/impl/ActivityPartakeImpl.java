@@ -4,8 +4,11 @@ import cn.bugstack.middleware.db.router.strategy.IDBRouterStrategy;
 import com.kevin.common.Constance;
 import com.kevin.common.Result;
 import com.kevin.domain.activity.model.req.PartakeReq;
+import com.kevin.domain.activity.model.resp.StockResult;
 import com.kevin.domain.activity.model.vo.ActivityBilVO;
+import com.kevin.domain.activity.model.vo.ActivityPartakeRecordVO;
 import com.kevin.domain.activity.model.vo.DrawOrderVO;
+import com.kevin.domain.activity.model.vo.UserTakeActivityVO;
 import com.kevin.domain.activity.reporisitory.UserTakeActivityRepository;
 import com.kevin.domain.activity.service.partake.BaseActivityPartake;
 import com.kevin.domain.support.ids.IIDGenerate;
@@ -64,7 +67,12 @@ public class ActivityPartakeImpl extends BaseActivityPartake {
     }
 
     @Override
-    protected Result grabActivity(PartakeReq partake, ActivityBilVO bill) {
+    protected StockResult subtractionActivityStockByRedis(String uId, Long activityId, Integer stockCount) {
+        return activityRepository.subtractionActivityStockByRedis(uId,activityId,stockCount);
+    }
+
+    @Override
+    protected Result grabActivity(PartakeReq partake, ActivityBilVO bill,Long takeId) {
         try {
             dbRouter.doRouter(partake.getUid());
             return transactionTemplate.execute(status->{
@@ -76,7 +84,6 @@ public class ActivityPartakeImpl extends BaseActivityPartake {
                         logger.error("领取活动，扣减个人已参与次数失败 activityId：{} uId：{}", partake.getActivityId(), partake.getUid());
                         return Result.buildFailResult(Constance.ResponseCode.NO_UPDATE);
                     }
-                    Long takeId = idGenerateMap.get(Constance.Ids.SnowFlake).nextId();
                     userTakeActivityRepository.takeActivity(bill.getActivityId(),bill.getActivityName(),bill.getTakeCount(),bill.getUserTakeLeftCount(),bill.getUid(),partake.getPartakeDate(),takeId);
                 } catch (Exception e) {
                     status.setRollbackOnly();
@@ -88,6 +95,26 @@ public class ActivityPartakeImpl extends BaseActivityPartake {
         } finally {
             dbRouter.clear();
         }
+    }
+
+    @Override
+    public UserTakeActivityVO queryNoConsumedTakeActivityOrder(Long activityId, String uid) {
+        return userTakeActivityRepository.queryNoConsumedTakeActivityOrder(activityId,uid);
+    }
+
+    @Override
+    public void recoverActivityCacheStockByRedis(Long activityId, String stockKey, Integer code) {
+        activityRepository.recoverActivityCacheStockByRedis(activityId,stockKey,code);
+    }
+
+    @Override
+    public void recoverActivityCacheStockByRedisAndDecrCount(Long activityId, String stockKey, Integer code) {
+        activityRepository.recoverActivityCacheStockByRedisAndDecrCount(activityId,stockKey,code);
+    }
+
+    @Override
+    public void updateActivityStock(ActivityPartakeRecordVO recordVO) {
+        userTakeActivityRepository.updateActivityStock(recordVO);
     }
 
     /**

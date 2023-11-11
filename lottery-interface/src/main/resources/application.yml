@@ -89,6 +89,11 @@ spring:
       #listner负责ack，每调用一次，就立即commit
       ack-mode: manual_immediate
       missing-topics-fatal: false
+  redis:
+    host: 124.221.25.145
+    database: 0
+    timeout: 3000
+    port: 6379
 
 # xxl-job
 xxl:

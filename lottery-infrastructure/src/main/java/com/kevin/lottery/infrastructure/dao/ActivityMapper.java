@@ -25,6 +25,8 @@ public interface ActivityMapper extends BaseMapper<Activity> {
     int subtractionActivityStock(Long activityId);
 
     List<Activity> scanToDoActivityList(Long id);
+
+    void updateActivityStock(Activity activity);
 }
 
 

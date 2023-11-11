@@ -3,10 +3,10 @@ package com.kevin.lottery.application.process.impl;
 import com.kevin.common.Constance;
 import com.kevin.domain.activity.model.req.PartakeReq;
 import com.kevin.domain.activity.model.resp.PartakeResult;
+import com.kevin.domain.activity.model.vo.ActivityPartakeRecordVO;
 import com.kevin.domain.activity.model.vo.DrawOrderVO;
 import com.kevin.domain.activity.model.vo.InvoiceVO;
 import com.kevin.domain.activity.service.partake.IActivityPartake;
-import com.kevin.domain.award.model.vo.ShippingAddress;
 import com.kevin.domain.rule.model.req.DecisionMatterReq;
 import com.kevin.domain.rule.model.rsep.EngineResult;
 import com.kevin.domain.rule.repository.IRuleRespository;
@@ -23,7 +23,6 @@ import com.kevin.lottery.application.process.resp.DrawProcessResp;
 import com.kevin.lottery.application.process.resp.RuleQuantificationCrowdResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.support.SendResult;
 import org.springframework.stereotype.Service;
 import org.springframework.util.concurrent.ListenableFuture;
@@ -70,28 +69,34 @@ public class ActivityProcessImpl implements IActivityProcess {
             return new DrawProcessResp(partakeResult.getCode(),partakeResult.getInfo());
         }
 
-        // 2.执行抽奖
+        // 2.使用mq异步更新活动的领取数
+
+        ActivityPartakeRecordVO activityPartakeRecordVO = buildActivityPartakeRecordVO(req, partakeResult.getStockCount(), partakeResult.getStockSurplusCount());
+        // 使用消息中间件异步去更新对应的库存状态
+        kafkaProducer.sendLotteryActivityPartakeRecord(activityPartakeRecordVO);
+
+        // 3.执行抽奖
         DrawResp drawResp = drawExec.doDrawExec(new DrawReq(req.getUId(), req.getActivityId(),String.valueOf(partakeResult.getTakeId())));
         if(Constance.DrawState.FAIL.getCode().equals(drawResp.getDrawState())){
             return new DrawProcessResp(Constance.ResponseCode.LOSING_AWARD.getCode(),Constance.ResponseCode.LOSING_AWARD.getDesc());
         }
 
-        // 3.结果落库
+        // 4.结果落库
         DrawOrderVO drawOrderVO = buildDrawOrderVO(req, partakeResult.getStrategyId(), partakeResult.getTakeId(), drawResp.getDrawAwardVO());
         activityPartake.recordDrawOrder(drawOrderVO);
 
-        //4. 发送MQ,触发抽奖流程
+        // 5.发送MQ,触发抽奖流程
         InvoiceVO invoiceVO = buildInvoiceVO(drawOrderVO);
-        ListenableFuture<SendResult<String, Object>> future = kafkaProducer.send(invoiceVO);
+        ListenableFuture<SendResult<String, Object>> future = kafkaProducer.sendLotteryInvoice(invoiceVO);
 
         future.addCallback(new ListenableFutureCallback<SendResult<String, Object>>() {
-            // 4.1 MQ 消息发送完成，更新数据库表 user_strategy_export.mq_state = 1
+            // 5.1 MQ 消息发送完成，更新数据库表 user_strategy_export.mq_state = 1
             @Override
             public void onFailure(Throwable ex) {
                 activityPartake.updateInvoiceMqState(req.getUId(),invoiceVO.getOrderId(),Constance.MQState.FAIL.getCode());
                 logger.error("消息发送失败了：uid:{},orderId:{}",req.getUId(),invoiceVO.getOrderId());
             }
-            // 4.2 MQ 消息发送失败，更新数据库表 user_strategy_export.mq_state = 2 【等待定时任务扫码补偿MQ消息】
+            // 5.2 MQ 消息发送失败，更新数据库表 user_strategy_export.mq_state = 2 【等待定时任务扫码补偿MQ消息】
             @Override
             public void onSuccess(SendResult<String, Object> result) {
                 activityPartake.updateInvoiceMqState(req.getUId(),invoiceVO.getOrderId(),Constance.MQState.COMPLETE.getCode());
@@ -100,6 +105,15 @@ public class ActivityProcessImpl implements IActivityProcess {
         });
         //返回结果
         return new DrawProcessResp(Constance.ResponseCode.SUCCESSFUL.getCode(), Constance.ResponseCode.SUCCESSFUL.getDesc(),drawResp.getDrawAwardVO());
+    }
+
+    private ActivityPartakeRecordVO buildActivityPartakeRecordVO(DrawProcessReq req, Integer stockCount, Integer stockSurplusCount) {
+        ActivityPartakeRecordVO activityPartakeRecordVO = new ActivityPartakeRecordVO();
+        activityPartakeRecordVO.setActivityId(req.getActivityId());
+        activityPartakeRecordVO.setuId(req.getUId());
+        activityPartakeRecordVO.setStockCount(stockCount);
+        activityPartakeRecordVO.setStockSurplusCount(stockSurplusCount);
+        return activityPartakeRecordVO;
     }
 
     @Override

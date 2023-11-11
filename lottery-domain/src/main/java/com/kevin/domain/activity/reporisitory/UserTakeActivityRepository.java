@@ -1,7 +1,9 @@
 package com.kevin.domain.activity.reporisitory;
 
 
+import com.kevin.domain.activity.model.vo.ActivityPartakeRecordVO;
 import com.kevin.domain.activity.model.vo.DrawOrderVO;
+import com.kevin.domain.activity.model.vo.UserTakeActivityVO;
 
 import java.util.Date;
 
@@ -40,4 +42,8 @@ public interface UserTakeActivityRepository {
     void saveUserStrategyExport(DrawOrderVO drawOrderVO);
 
     void updateInvoiceMqState(String uId, Long orderId, Integer mqState);
+
+    UserTakeActivityVO queryNoConsumedTakeActivityOrder(Long activityId, String uid);
+
+    void updateActivityStock(ActivityPartakeRecordVO recordVO);
 }
