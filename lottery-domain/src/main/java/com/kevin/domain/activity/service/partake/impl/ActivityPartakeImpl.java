@@ -40,7 +40,7 @@ public class ActivityPartakeImpl extends BaseActivityPartake {
     private IDBRouterStrategy dbRouter;
     @Override
     protected Result checkActivityBill(PartakeReq partake, ActivityBilVO bill) {
-        if(!Constance.ActivityState.DOING.getCode().equals(bill.getState())){
+        if(null == bill ||!Constance.ActivityState.DOING.getCode().equals(bill.getState())){
             logger.info("当前活动状态：{},不可用",bill.getState());
             return new Result(Constance.ResponseCode.UN_ERROR.getCode(),"当前状态不可用");
         }

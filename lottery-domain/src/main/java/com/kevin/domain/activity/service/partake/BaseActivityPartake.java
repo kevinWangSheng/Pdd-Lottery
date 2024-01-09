@@ -10,6 +10,8 @@ import com.kevin.domain.activity.model.vo.UserTakeActivityVO;
 import com.kevin.domain.support.ids.IIDGenerate;
 
 import javax.annotation.Resource;
+import java.util.ArrayDeque;
+import java.util.Deque;
 import java.util.Map;
 
 
@@ -19,12 +21,13 @@ public abstract class BaseActivityPartake extends ActivityPartakeSupport impleme
     private Map<Constance.Ids, IIDGenerate> idGeneratorMap;
     @Override
     public PartakeResult doPartake(PartakeReq req) {
-        // 1.获取之前抽奖失败的，如果有的话，在此执行，之前失败是因为抽奖没有抽到
+        // 1.获取之前抽奖失败的，如果有的话，在此执行，他抽到讲了还没有消费，是不能参与第二次抽奖的
         UserTakeActivityVO userTakeActivityVO = this.queryNoConsumedTakeActivityOrder(req.getActivityId(), req.getUid());
         if(null != userTakeActivityVO){
             return buildPartakeResult(userTakeActivityVO.getStrategyId() ,userTakeActivityVO.getTakeId(),Constance.ResponseCode.NOT_CONSUMED_TAKE);
         }
         // 2.查看活动账单
+
         ActivityBilVO activityBilVO = super.queryActivityBill(req);
 
         // 3.活动信息校验处理【活动库存、状态、日期、个人参与次数】

@@ -106,8 +106,12 @@ public class ActivityRepository implements IActivityRepository{
 
         // 从缓存中获取库存,主要是因为处于秒杀状态，所以需要从redis中直接获取，而不是数据库，因为数据库还没有更新，但是第一次需要从数据库中获取对应
         Object usedStockCountObj =  redisUtils.get(Constance.RedisKey.KEY_LOTTERY_ACTIVITY_STOCK_COUNT(req.getActivityId()));
-        // 获取活动的参与信息
+        // 获取活动的参与信息，这里是进行库存的查询
         Activity activity = activityMapper.queryById(req.getActivityId());
+        // 这里可能会出现多个线程争抢的情况，需要进行二次获取,同时需要判断是否已经抢完了，通过redis的库存和总数进行比较判断是否抢完
+        if(null == usedStockCountObj){
+            usedStockCountObj = redisUtils.get(Constance.RedisKey.KEY_LOTTERY_ACTIVITY_STOCK_COUNT(req.getActivityId()));
+        }
         ActivityBilVO activityBilVO = new ActivityBilVO();
         activityBilVO.setActivityId(activity.getActivityId())
                 .setActivityName(activity.getActivityName())
@@ -122,7 +126,7 @@ public class ActivityRepository implements IActivityRepository{
                 .setUid(req.getUid())
                 .setUserTakeLeftCount(null == userTakeActivityCount? 0 : userTakeActivityCount.getLeftcount());
         if(usedStockCountObj == null){
-            // 如果对应的分布式没有设置过需要设置一下，并且在获得锁之后还需要在判断一下有没有设置，如果设置了就不需要在设置了
+            // 如果对应的分布式没有设置过需要设置一下，并且在获得锁之后还需要在判断一下有没有设置，如果设置了就不需要在设置了,这里进行了一个双重校验
             redisUtils.setNx(Constance.RedisKey.SET_LOCK+activityBilVO.getActivityId(),1000l);
             if(!redisUtils.hasKey(Constance.RedisKey.KEY_LOTTERY_ACTIVITY_STOCK_COUNT(activityBilVO.getActivityId()))) {
                 redisUtils.set(Constance.RedisKey.KEY_LOTTERY_ACTIVITY_STOCK_COUNT(req.getActivityId()), activityBilVO.getStockCount() - activityBilVO.getStockSurplusCount());

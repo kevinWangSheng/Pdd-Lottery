@@ -37,7 +37,7 @@ public class LotteryInvoiceListener {
     @KafkaListener(topics = Constance.KAFKA.LOTTY_INVOICE,groupId = Constance.KAFKA.LOTTERY_CONSUMER_GROUP)
     public void testTopic(ConsumerRecord<?, ?> record, Acknowledgment ack, @Header(KafkaHeaders.RECEIVED_TOPIC) String topic){
         Optional<?> message = Optional.ofNullable(record.value());
-
+        
         try {
             if(message.isPresent()){
                 // 进行消息的对象转化

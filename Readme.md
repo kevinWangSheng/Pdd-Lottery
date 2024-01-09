@@ -1,5 +1,7 @@
-# Lottery营销平台
+# PDD抽奖
 
+## 抽奖流程
+![img.png](imgs/img_10.png)
 ## 基础架构
 
 ![img.png](imgs/img.png)
